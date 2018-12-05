@@ -39,7 +39,7 @@ def analyze():
 def sleepy():
     sleeps, intervals = analyze()
     interval, value = -1, -1 # part 1
-    id, minute, value2 = -1, -1, -1 #part 2
+    id, minute, value2 = -1, -1, -1 # part 2
     for i in range(5000):
         if sleeps[i] != 0 and interval < intervals[i]: # part 1
             interval, value = intervals[i], i * sleeps[i].max_index()
