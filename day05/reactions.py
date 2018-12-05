@@ -1,25 +1,22 @@
-def reactive(unit, unit2):
-    return (unit.lower() == unit2.lower()) and (unit != unit2)
+class Polymer():
+    def __init__(self, line = [l.rstrip() for l in open("input.txt")][0]):
+        self.polymers, self.line = [], line
+        for i in self.line:
+            if self.polymers and self.reactive(i, self.polymers[-1]):
+                self.polymers.pop()
+            else:
+                self.polymers.append(i)
+    def reactive(self, unit, unit2):
+        return (unit.lower() == unit2.lower()) and (unit != unit2)
+    def length(self):
+        return len(self.polymers)
+    def removals(self):
+        for i in range(26):
+            upper, lower = chr(ord('A') + i), chr(ord('a') + i)
+            yield self.line.replace(upper, '').replace(lower, '')
+    def shortest(self):
+        return min((Polymer(l).length() for l in self.removals()))
 
-def polymer(line):
-    polymers = []
-    for i in line:
-        if polymers and reactive(i, polymers[-1]):
-            polymers.pop()
-        else:
-            polymers += [i]
-    return polymers
-
-def shortest_removal(line):
-    value = -1
-    for i in range(26):
-        upper, lower = chr(ord('A') + i), chr(ord('a') + i)
-        l = line.replace(upper, '').replace(lower, '')
-        value = len(polymer(l)) if value == -1 or len(polymer(l)) < value else value
-    return value
-
-line = [l for l in open("input.txt")][0].rstrip()
-
-print(len(polymer(line))) # part 1
-
-print(shortest_removal(line))
+p = Polymer()
+print(p.length())
+print(p.shortest())
