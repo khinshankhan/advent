@@ -18,48 +18,33 @@ class Time():
     
     def max_index(self):
         return self.minutes.index(max(self.minutes))
-        
+
+def analyze():
+    times, sleep_sched, interval_sched, id, time_start = sort_data(), [0] * 5000, [0] * 5000, -1, -1
+    for i in times:
+        if "#" in i:
+            id = int(i.split(' ')[3].split('#')[1])
+        if "asleep" in i:
+            time_start = int(i.split(' ')[1].split(']')[0].split(':')[1])
+        if "wakes" in i:
+            time_end = int(i.split(' ')[1].split(']')[0].split(':')[1])
+            if sleep_sched[id] != 0:
+                sleep_sched[id].edit(time_start, time_end - time_start)
+                interval_sched[id] += time_end - time_start
+            else:
+                sleep_sched[id] = Time(time_start, time_end - time_start)
+                interval_sched[id] = time_end - time_start
+    return (sleep_sched, interval_sched)
+
 def sleepy():
-    times, guards, id, time_start = sort_data(), [0] * 5000, -1, -1
-    for i in times:
-        if "#" in i:
-            id = int(i.split(' ')[3].split('#')[1])
-        if "asleep" in i:
-            time_start = int(i.split(' ')[1].split(']')[0].split(':')[1])
-        if "wakes" in i:
-            time_end = int(i.split(' ')[1].split(']')[0].split(':')[1])
-            if guards[id] != 0:
-                guards[id][1].edit(time_start, time_end - time_start)
-                guards[id][0] += time_end - time_start
-            else:
-                guards[id] = [time_end - time_start, Time(time_start, time_end - time_start)]
-    interval, value = -1, -1
+    sleeps, intervals = analyze()
+    interval, value = -1, -1 # part 1
+    id, minute, value2 = -1, -1, -1 #part 2
     for i in range(5000):
-        if guards[i] != 0:
-            if interval < guards[i][0]:
-                interval, value = guards[i][0], i * guards[i][1].max_index()
-    return value
-    
+        if sleeps[i] != 0 and interval < intervals[i]: # part 2
+            interval, value = intervals[i], i * sleeps[i].max_index()
+        if sleeps[i] != 0 and value2 < sleeps[i].max_value(): # part 2
+            id, minute, value2 = i, sleeps[i].max_index(), sleeps[i].max_value()
+    return (value, id * minute)
+
 print(sleepy())
-
-def sleepy2():
-    times, guards, id, time_start = sort_data(), [0] * 5000, -1, -1
-    for i in times:
-        if "#" in i:
-            id = int(i.split(' ')[3].split('#')[1])
-        if "asleep" in i:
-            time_start = int(i.split(' ')[1].split(']')[0].split(':')[1])
-        if "wakes" in i:
-            time_end = int(i.split(' ')[1].split(']')[0].split(':')[1])
-            if guards[id] != 0:
-                guards[id].edit(time_start, time_end - time_start)
-            else:
-                guards[id] = Time(time_start, time_end - time_start)
-    id, minute, value = -1, -1, -1
-    for i in range(5000):
-        if guards[i] != 0:
-            if value < guards[i].max_value():
-                id, minute, value = i, guards[i].max_index(), guards[i].max_value()
-    return id * minute
-
-print(sleepy2())
