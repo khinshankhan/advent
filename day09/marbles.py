@@ -13,6 +13,6 @@ def play(max_players, beginning, end, circle):
     return (circle, max(scores))
 
 raw = [l.rstrip().split(' ') for l in open("input.txt")][0]
-circle, score = play(int(raw[0]), 0, int(raw[6]), deque([0])) # part 1
+circle, score = play(int(raw[0]), 1, int(raw[6]), deque([0])) # part 1
 circle, score2 = play(int(raw[0]), int(raw[6]) + 1, (int(raw[6]) * 100) + 1, circle) # part 2
 print score, score2
