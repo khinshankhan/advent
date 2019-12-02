@@ -29,8 +29,6 @@ def gravity(f, val1, val2):
 
         # Try all (noun, verb) until we found a good match
         for noun in range(100):
-            found = False
-
             for verb in range(100):
                 # make a copy of list
                 ll = [x for x in l]
@@ -49,14 +47,9 @@ def gravity(f, val1, val2):
                     # pair works for part 2
                     # part 2 complete
                     val2 = (100 * noun) + verb
-                    # break double for loop
-                    found = True
-                    break
 
-            if found:
-                break
-
-    return (val1, val2)
+                    # we're done
+                    return (val1, val2)
 
 
 def main():
