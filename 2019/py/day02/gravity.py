@@ -16,7 +16,8 @@ def program_alarm_1202(pos, listo):
 
     # determine if opcode continues programs or halts
     if not OPCODES[opcode]:
-        return listo
+        # only zeroeth value matters
+        return listo[0]
     else:
         # execute instruction
         listo[nex] = OPCODES[opcode](listo[op1], listo[op2])
@@ -36,14 +37,14 @@ def gravity(f, val1, val2):
                 ll[1] = noun
                 ll[2] = verb
                 # run stateful changes on list
-                ll = program_alarm_1202(0, ll)
+                root = program_alarm_1202(0, ll)
 
                 # a safe guess that program hasn't ended yet
                 # really a heuristic based on my input
                 if noun == PART1_POS1 and verb == PART1_POS2:
                     # part 1 complete
-                    val1 = ll[0]
-                if ll[0] == TARGET:
+                    val1 = root
+                if root == TARGET:
                     # pair works for part 2
                     # part 2 complete
                     val2 = (100 * noun) + verb
