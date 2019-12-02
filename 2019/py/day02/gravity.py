@@ -24,6 +24,7 @@ def program_alarm_1202(pos, listo):
         # keep going until we reach a halt
         return program_alarm_1202(pos + 4, listo)
 
+
 def gravity(f, val1, val2):
     for l in f:
         l = [int(i) for i in l.strip().split(",")]
