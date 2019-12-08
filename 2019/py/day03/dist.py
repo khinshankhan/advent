@@ -23,9 +23,7 @@ def get_steps(wire, steps):
 
 
 def dist(f, val1, val2):
-    listo = [l.strip().split(",") for l in f]
-    listo[0] = [(i[0], int(i[1:])) for i in listo[0]]
-    listo[1] = [(i[0], int(i[1:])) for i in listo[1]]
+    listo = [[(i[0], int(i[1:])) for i in l.strip().split(",")] for l in f]
 
     d1 = get_steps(listo[0], 0)
     d2 = get_steps(listo[1], 0)
