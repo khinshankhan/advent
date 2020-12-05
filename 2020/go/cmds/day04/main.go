@@ -25,48 +25,30 @@ func main() {
 		"ecl": true,
 		"pid": true,
 	}
-	fmt.Println(parta(lines, validAttributes))
-	fmt.Println(partb(lines, validAttributes))
-}
-
-func parta(lines []string, validAttributes map[string]bool) int {
-	valid := 0
+	parta, partb := 0, 0
 	for _, passport := range lines {
 		passport = strings.ReplaceAll(passport, "\n", " ")
 		passportAttributes := strings.Split(passport, " ")
-		currentKeys := make(map[string]bool)
+		keyCountA, keyCountB := 0, 0
 		for _, passportAttribute := range passportAttributes {
 			passportKey := strings.Split(passportAttribute, ":")
 			if validAttributes[passportKey[0]] {
-				currentKeys[passportKey[0]] = true
+				keyCountA += 1
+				if verifyKey(passportKey[0], passportKey[1]) {
+					keyCountB += 1
+				}
 			}
 		}
 
-		if len(currentKeys) == len(validAttributes) {
-			valid += 1
+		if keyCountA == len(validAttributes) {
+			parta += 1
+		}
+		if keyCountB == len(validAttributes) {
+			partb += 1
 		}
 	}
-	return valid
-}
-
-func partb(lines []string, validAttributes map[string]bool) int {
-	valid := 0
-	for _, passport := range lines {
-		passport = strings.ReplaceAll(passport, "\n", " ")
-		passportAttributes := strings.Split(passport, " ")
-		keyCount := 0
-		for _, passportAttribute := range passportAttributes {
-			passportKey := strings.Split(passportAttribute, ":")
-			if validAttributes[passportKey[0]] && verifyKey(passportKey[0], passportKey[1]) {
-				keyCount += 1
-			}
-		}
-
-		if keyCount == len(validAttributes) {
-			valid += 1
-		}
-	}
-	return valid
+	fmt.Println(parta)
+	fmt.Println(partb)
 }
 
 func verifyKey(attributeKey, attributeValue string) bool {
