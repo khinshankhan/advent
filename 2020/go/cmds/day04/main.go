@@ -2,16 +2,14 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"log"
-	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/kkhan01/advent/2020/go/utils"
 )
 
 func main() {
-	lines, err := customReadRelativeFile("../data/day04.txt", "\n\n")
+	lines, err := utils.ReadRelativeFile1DString("../data/day04.txt", "\n\n", false)
 	if err != nil {
 		panic(err)
 	}
@@ -89,20 +87,4 @@ func verifyKey(attributeKey, attributeValue string) bool {
 		fmt.Println("debug: invalid key", attributeKey)
 		return false
 	}
-}
-
-func customReadRelativeFile(fname, separator string) ([]string, error) {
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
-
-	b, err := ioutil.ReadFile(filepath.Join(dir, fname))
-	if err != nil {
-		return nil, err
-	}
-
-	rawLines := strings.Split(string(b), separator)
-	return rawLines, nil
 }

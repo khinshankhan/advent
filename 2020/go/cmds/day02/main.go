@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	lines, err := utils.ReadRelativeFile2DString("../data/day02.txt", "\n", " ")
+	lines, err := utils.ReadRelativeFile2DString("../data/day02.txt", "\n", " ", true)
 	if err != nil {
 		panic(err)
 	}

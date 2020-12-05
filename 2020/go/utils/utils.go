@@ -10,7 +10,7 @@ import (
 )
 
 // ReadRelativeFile1DString will return an array of strings from a given file separated by separator
-func ReadRelativeFile1DString(fname, separator string) ([]string, error) {
+func ReadRelativeFile1DString(fname, separator string, skipLast bool) ([]string, error) {
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Fatal(err)
@@ -23,12 +23,14 @@ func ReadRelativeFile1DString(fname, separator string) ([]string, error) {
 	}
 
 	rawLines := strings.Split(string(b), separator)
-	lines := rawLines[:len(rawLines)-1]
-	return lines, nil
+	if skipLast {
+		return rawLines[:len(rawLines)-1], nil
+	}
+	return rawLines, nil
 }
 
 // ReadRelativeFile2DString will return an array of strings from a given file separated by separator
-func ReadRelativeFile2DString(fname, separator, separator2 string) ([][]string, error) {
+func ReadRelativeFile2DString(fname, separator, separator2 string, skipLast bool) ([][]string, error) {
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Fatal(err)
@@ -41,7 +43,9 @@ func ReadRelativeFile2DString(fname, separator, separator2 string) ([][]string, 
 	}
 
 	rawLines := strings.Split(string(b), separator)
-	rawLines = rawLines[:len(rawLines)-1]
+	if skipLast {
+		rawLines = rawLines[:len(rawLines)-1]
+	}
 
 	lines := make([][]string, len(rawLines))
 	for i, l := range rawLines {
@@ -51,7 +55,7 @@ func ReadRelativeFile2DString(fname, separator, separator2 string) ([][]string, 
 }
 
 // ReadRelativeFile1DInt will return an array of ints from a given file separated by separator
-func ReadRelativeFile1DInt(fname, separator string) ([]int, error) {
+func ReadRelativeFile1DInt(fname, separator string, skipLast bool) ([]int, error) {
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Fatal(err)
@@ -64,7 +68,12 @@ func ReadRelativeFile1DInt(fname, separator string) ([]int, error) {
 	}
 
 	rawLines := strings.Split(string(b), separator)
-	lines := rawLines[:len(rawLines)-1]
+	var lines []string
+	if skipLast {
+		lines = rawLines[:len(rawLines)-1]
+	} else {
+		lines = rawLines
+	}
 
 	nums := make([]int, len(lines))
 	for i, l := range lines {
@@ -78,7 +87,7 @@ func ReadRelativeFile1DInt(fname, separator string) ([]int, error) {
 }
 
 // ReadRelativeFile2DInt will return an array of ints from a given file separated by separator
-func ReadRelativeFile2DInt(fname, separator string) ([]int, error) {
+func ReadRelativeFile2DInt(fname, separator string, skipLast bool) ([]int, error) {
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Fatal(err)
@@ -91,7 +100,12 @@ func ReadRelativeFile2DInt(fname, separator string) ([]int, error) {
 	}
 
 	rawLines := strings.Split(string(b), separator)
-	lines := rawLines[:len(rawLines)-1]
+	var lines []string
+	if skipLast {
+		lines = rawLines[:len(rawLines)-1]
+	} else {
+		lines = rawLines
+	}
 
 	nums := make([]int, len(lines))
 	for i, l := range lines {
