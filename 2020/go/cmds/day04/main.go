@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"sync"
 
 	"github.com/kkhan01/advent/2020/go/utils"
 )
@@ -29,19 +28,12 @@ func partb(lines []string) int {
 	minSeat, maxSeat := 10000, 0
 	takenSeats := make(map[int]bool, len(lines))
 
-	// not sure if this actually parallelized properly
-	wg := sync.WaitGroup{}
 	for _, line := range lines {
-		wg.Add(1)
-		go func(line string) {
-			seat := findSeatNumber(line)
-			minSeat = utils.Min(minSeat, seat)
-			maxSeat = utils.Max(maxSeat, seat)
-			takenSeats[seat] = true
-			wg.Done()
-		}(line)
+		seat := findSeatNumber(line)
+		minSeat = utils.Min(minSeat, seat)
+		maxSeat = utils.Max(maxSeat, seat)
+		takenSeats[seat] = true
 	}
-	wg.Wait()
 
 	for i := minSeat; i < maxSeat; i++ {
 		if takenSeats[i-1] && takenSeats[i+1] && !takenSeats[i] {
