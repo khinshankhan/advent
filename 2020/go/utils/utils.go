@@ -9,8 +9,8 @@ import (
 	"strings"
 )
 
-// ReadRelativeFileString will return an array of strings from a given file separated by separator
-func ReadRelativeFileString(fname, separator string) ([]string, error) {
+// ReadRelativeFile1DString will return an array of strings from a given file separated by separator
+func ReadRelativeFile1DString(fname, separator string) ([]string, error) {
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Fatal(err)

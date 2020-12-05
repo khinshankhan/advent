@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	lines, err := utils.ReadRelativeFileString("../data/day05.txt", "\n")
+	lines, err := utils.ReadRelativeFile1DString("../data/day05.txt", "\n")
 	if err != nil {
 		panic(err)
 	}
