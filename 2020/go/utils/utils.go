@@ -2,32 +2,104 @@ package utils
 
 import (
 	"io/ioutil"
+	"log"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
 
-// ReadIntFile will return an array of ints from a given file separated by newlines
-// https://stackoverflow.com/a/9863218
-func ReadIntFile(fname string) (nums []int, err error) {
-	b, err := ioutil.ReadFile(fname)
+// ReadRelativeFileString will return an array of strings from a given file separated by separator
+func ReadRelativeFileString(fname, separator string) ([]string, error) {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+
+	b, err := ioutil.ReadFile(filepath.Join(dir, fname))
 	if err != nil {
 		return nil, err
 	}
 
-	lines := strings.Split(string(b), "\n")
-	nums = make([]int, 0, len(lines))
+	rawLines := strings.Split(string(b), separator)
+	lines := rawLines[:len(rawLines)-1]
+	return lines, nil
+}
 
-	for _, l := range lines {
-		if len(l) == 0 {
-			continue
-		}
-		// use scanf later days
+// ReadRelativeFile2DString will return an array of strings from a given file separated by separator
+func ReadRelativeFile2DString(fname, separator, separator2 string) ([][]string, error) {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+
+	b, err := ioutil.ReadFile(filepath.Join(dir, fname))
+	if err != nil {
+		return nil, err
+	}
+
+	rawLines := strings.Split(string(b), separator)
+	rawLines = rawLines[:len(rawLines)-1]
+
+	lines := make([][]string, len(rawLines))
+	for i, l := range rawLines {
+		lines[i] = strings.Split(l, separator2)
+	}
+	return lines, nil
+}
+
+// ReadRelativeFile1DInt will return an array of ints from a given file separated by separator
+func ReadRelativeFile1DInt(fname, separator string) ([]int, error) {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+
+	b, err := ioutil.ReadFile(filepath.Join(dir, fname))
+	if err != nil {
+		return nil, err
+	}
+
+	rawLines := strings.Split(string(b), separator)
+	lines := rawLines[:len(rawLines)-1]
+
+	nums := make([]int, len(lines))
+	for i, l := range lines {
 		n, err := strconv.Atoi(l)
 		if err != nil {
 			return nil, err
 		}
-		nums = append(nums, n)
+		nums[i] = n
+	}
+	return nums, nil
+}
+
+// ReadRelativeFile2DInt will return an array of ints from a given file separated by separator
+func ReadRelativeFile2DInt(fname, separator string) ([]int, error) {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
 	}
 
+	b, err := ioutil.ReadFile(filepath.Join(dir, fname))
+	if err != nil {
+		return nil, err
+	}
+
+	rawLines := strings.Split(string(b), separator)
+	lines := rawLines[:len(rawLines)-1]
+
+	nums := make([]int, len(lines))
+	for i, l := range lines {
+		n, err := strconv.Atoi(l)
+		if err != nil {
+			return nil, err
+		}
+		nums[i] = n
+	}
 	return nums, nil
 }
