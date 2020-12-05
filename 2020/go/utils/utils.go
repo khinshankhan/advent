@@ -104,6 +104,11 @@ func ReadRelativeFile2DInt(fname, separator string) ([]int, error) {
 	return nums, nil
 }
 
+// Xor returns xor of two bools
+func Xor(a, b bool) bool {
+	return (a || b) && !(a && b)
+}
+
 // Max returns max of two ints
 func Max(a, b int) int {
 	if a < b {
