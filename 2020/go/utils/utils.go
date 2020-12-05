@@ -103,3 +103,19 @@ func ReadRelativeFile2DInt(fname, separator string) ([]int, error) {
 	}
 	return nums, nil
 }
+
+// Max returns max of two ints
+func Max(a, b int) int {
+	if a < b {
+		return b
+	}
+	return a
+}
+
+// Min returns min of two ints
+func Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
