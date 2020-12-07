@@ -15,6 +15,7 @@ func main() {
 	}
 
 	fmt.Println(parta(lines))
+	fmt.Println(partb(lines))
 }
 
 func parta(lines []string) int {
@@ -71,6 +72,48 @@ func parta(lines []string) int {
 		if v {
 			ans += 1
 		}
+	}
+	return ans
+}
+
+func partb(lines []string) int {
+	ans := 0
+
+	checked := make(map[string]bool)
+	dict := map[string]map[string]int{}
+	for _, line := range lines {
+		occured := strings.Count(line[5:], "shiny gold")
+		splitted := strings.Split(line, "bags contain")
+		bagType := splitted[0] + "bag"
+		bags := strings.Split(strings.ReplaceAll(splitted[1][1:len(splitted[1])-1], "bags", "bag"), ", ")
+
+		stored := make(map[string]int)
+		dict[bagType] = stored
+
+		if occured > 0 {
+			checked[bagType] = true
+		} else {
+			checked[bagType] = false
+		}
+
+		for _, bag := range bags {
+			rawCount := bag[0]
+			count, _ := strconv.Atoi(string(rawCount))
+			if !strings.HasPrefix(bag, "no") {
+				stored[bag[2:]] = count
+			}
+		}
+	}
+
+	for color, count := range dict["shiny gold bag"] {
+		ans += count + count*helper(color, dict, checked)
+	}
+	return ans
+}
+
+func helper(inColor string, dict map[string]map[string]int, invalids map[string]bool) (ans int) {
+	for color, count := range dict[inColor] {
+		ans += count + count*helper(color, dict, invalids)
 	}
 	return ans
 }
