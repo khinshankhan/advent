@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -49,6 +50,7 @@ func parseInput() [][]int {
 func main() {
 	input := parseInput()
 	parta(input)
+	partb(input)
 }
 
 func max(a, b int) int {
@@ -68,4 +70,24 @@ func parta(input [][]int) {
 		m = max(m, sum)
 	}
 	fmt.Println(m)
+}
+
+func partb(input [][]int) {
+	sums := []int{}
+	for _, carrying := range input {
+		sum := 0
+		for _, calories := range carrying {
+			sum += calories
+		}
+		sums = append(sums, sum)
+	}
+
+	sort.Ints(sums)
+	top3 := sums[len(sums)-3:]
+
+	sum := 0
+	for _, calories := range top3 {
+		sum += calories
+	}
+	fmt.Println(sum)
 }
