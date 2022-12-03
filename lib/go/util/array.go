@@ -30,15 +30,15 @@ func Intersection[T comparable](a, b []T) []T {
 	return intersection
 }
 
-func Unique[T comparable](list []T) []T{
-	m  := make(map[T]bool)
+func Unique[T comparable](list []T) []T {
+	m := make(map[T]bool)
 	for _, e := range list {
 		m[e] = true
 	}
 
 	ret := make([]T, len(m))
-	i:= 0
-	for k := range m{
+	i := 0
+	for k := range m {
 		ret[i] = k
 		i++
 	}
