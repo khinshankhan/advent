@@ -10,6 +10,7 @@ import (
 func main() {
 	input := io.Read1DString("../data/day03.txt", "\n", true)
 	parta(input)
+	partb(input)
 }
 
 func runePoint(r rune) int {
@@ -30,6 +31,18 @@ func parta(input []string) {
 		a, b := splitStringEvenly(rucksack)
 		intersection := util.Intersection([]rune(a), []rune(b))
 		for _, r := range util.Unique(intersection) {
+			points += runePoint(r)
+		}
+	}
+	fmt.Println(points)
+}
+
+func partb(input []string) {
+	points := 0
+	for i := 0; i < len(input); i += 3 {
+		firstIntersection := util.Intersection([]rune(input[i]), []rune(input[i+1]))
+		secondIntersection := util.Intersection(firstIntersection, []rune(input[i+2]))
+		for _, r := range util.Unique(secondIntersection) {
 			points += runePoint(r)
 		}
 	}
