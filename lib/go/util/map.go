@@ -1,5 +1,9 @@
 package util
 
+import (
+	"github.com/khinshankhan/advent/lib/go/ds/set"
+)
+
 func ReverseMap[K comparable, V comparable](m map[K]V) map[V]K {
 	n := make(map[V]K, len(m))
 	for k, v := range m {
@@ -9,13 +13,8 @@ func ReverseMap[K comparable, V comparable](m map[K]V) map[V]K {
 }
 
 func ExistenceMap[T comparable](iterable []T) map[T]struct{} {
-	m := make(map[T]struct{})
-	var member struct{}
-	for _, e := range iterable {
-		m[e] = member
-	}
-
-	return m
+	s := set.New(iterable...)
+	return s.GetMap()
 }
 
 func FrequencyMap[T comparable](iterable []T) map[T]int {
