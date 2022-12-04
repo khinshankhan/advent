@@ -1,5 +1,9 @@
 package util
 
+import (
+	"github.com/khinshankhan/advent/lib/go/ds/set"
+)
+
 func Sum1DInt(input []int) int {
 	sum := 0
 	for _, e := range input {
@@ -23,14 +27,7 @@ func Intersection[T comparable](a, b []T) []T {
 }
 
 func Unique[T comparable](list []T) []T {
-	m := ExistenceMap(list)
+	s := set.New(list...)
+	return s.GetKeys()
 
-	ret := make([]T, len(m))
-	i := 0
-	for k := range m {
-		ret[i] = k
-		i++
-	}
-
-	return ret
 }
