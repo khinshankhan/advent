@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/khinshankhan/advent/lib/go/ds/circularslice"
+	"github.com/khinshankhan/advent/lib/go/ds"
 	"github.com/khinshankhan/advent/lib/go/io"
 )
 
@@ -20,7 +20,7 @@ const (
 )
 
 // == draw, prev win, next lose
-var handSigns = circularslice.New("rock", "paper", "scissors")
+var handSigns = ds.NewCircularSlice("rock", "paper", "scissors")
 
 var handPoints = map[int]int{
 	rock:    1,

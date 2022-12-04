@@ -1,7 +1,7 @@
 package util
 
 import (
-	"github.com/khinshankhan/advent/lib/go/ds/set"
+	"github.com/khinshankhan/advent/lib/go/ds"
 )
 
 func ReverseMap[K comparable, V comparable](m map[K]V) map[V]K {
@@ -13,8 +13,7 @@ func ReverseMap[K comparable, V comparable](m map[K]V) map[V]K {
 }
 
 func ExistenceMap[T comparable](iterable []T) map[T]struct{} {
-	s := set.New(iterable...)
-	return s.GetMap()
+	return ds.NewSet(iterable...).GetMap()
 }
 
 func FrequencyMap[T comparable](iterable []T) map[T]int {

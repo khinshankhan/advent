@@ -1,4 +1,4 @@
-package set
+package ds
 
 type Set[T comparable] struct {
 	m      map[T]struct{}
@@ -6,14 +6,15 @@ type Set[T comparable] struct {
 	synced bool
 }
 
-func New[T comparable](initial ...T) *Set[T] {
+func NewSet[T comparable](initial ...T) *Set[T] {
 	set := Set[T]{}
 
 	set.m = make(map[T]struct{}, len(initial))
 	for _, e := range initial {
 		set.m[e] = struct{}{}
 	}
-	set.GetKeys()
+
+	set.synced = false
 
 	return &set
 }

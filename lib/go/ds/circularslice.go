@@ -1,10 +1,10 @@
-package circularslice
+package ds
 
 type CircularSlice[T comparable] struct {
 	slice []T
 }
 
-func New[T comparable](initial ...T) *CircularSlice[T] {
+func NewCircularSlice[T comparable](initial ...T) *CircularSlice[T] {
 	cs := CircularSlice[T]{}
 
 	cs.slice = make([]T, len(initial))
