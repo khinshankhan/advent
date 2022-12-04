@@ -40,9 +40,12 @@ func parta(input []string) {
 func partb(input []string) {
 	points := 0
 	for i := 0; i < len(input); i += 3 {
-		firstIntersection := util.Intersection([]rune(input[i]), []rune(input[i+1]))
-		secondIntersection := util.Intersection(firstIntersection, []rune(input[i+2]))
-		for _, r := range util.Unique(secondIntersection) {
+		intersection := util.Intersection(
+			[]rune(input[i]),
+			[]rune(input[i+1]),
+			[]rune(input[i+2]),
+		)
+		for _, r := range util.Unique(intersection) {
 			points += runePoint(r)
 		}
 	}

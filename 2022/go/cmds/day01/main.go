@@ -6,7 +6,7 @@ import (
 
 	"github.com/khinshankhan/advent/lib/go/conv"
 	"github.com/khinshankhan/advent/lib/go/io"
-	"github.com/khinshankhan/advent/lib/go/util"
+	"github.com/khinshankhan/advent/lib/go/math"
 )
 
 func main() {
@@ -19,8 +19,8 @@ func main() {
 func parta(input [][]int) {
 	m := -1
 	for _, carrying := range input {
-		sum := util.Sum1DInt(carrying)
-		m = util.MaxInt(m, sum)
+		sum := math.SumInts(carrying...)
+		m = math.MaxInt(m, sum)
 	}
 
 	fmt.Println(m)
@@ -29,13 +29,13 @@ func parta(input [][]int) {
 func partb(input [][]int) {
 	sums := []int{}
 	for _, carrying := range input {
-		sum := util.Sum1DInt(carrying)
+		sum := math.SumInts(carrying...)
 		sums = append(sums, sum)
 	}
 
 	sort.Ints(sums)
 	top3 := sums[len(sums)-3:]
-	sum := util.Sum1DInt(top3)
+	sum := math.SumInts(top3...)
 
 	fmt.Println(sum)
 }

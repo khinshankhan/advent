@@ -4,15 +4,7 @@ import (
 	"github.com/khinshankhan/advent/lib/go/ds"
 )
 
-func Sum1DInt(input []int) int {
-	sum := 0
-	for _, e := range input {
-		sum += e
-	}
-	return sum
-}
-
-func Intersection[T comparable](a, b []T) []T {
+func intersection2Lists[T comparable](a, b []T) []T {
 	aFreqs := FrequencyMap(a)
 
 	intersection := []T{}
@@ -23,6 +15,14 @@ func Intersection[T comparable](a, b []T) []T {
 		}
 	}
 
+	return intersection
+}
+
+func Intersection[T comparable](lists ...[]T) []T {
+	intersection := lists[0]
+	for _, list := range lists[1:] {
+		intersection = intersection2Lists(intersection, list)
+	}
 	return intersection
 }
 
