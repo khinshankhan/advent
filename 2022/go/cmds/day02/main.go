@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/khinshankhan/advent/lib/go/ds/circularslice"
 	"github.com/khinshankhan/advent/lib/go/io"
-	"github.com/khinshankhan/advent/lib/go/util"
 )
 
 func main() {
@@ -13,38 +13,41 @@ func main() {
 	partb(input)
 }
 
-var winningHand = map[string]string{
-	"rock":    "scissor",
-	"paper":   "rock",
-	"scissor": "paper",
+const (
+	rock    = 0
+	paper   = 1
+	scissor = 2
+)
+
+// == draw, prev win, next lose
+var handSigns = circularslice.New("rock", "paper", "scissors")
+
+var handPoints = map[int]int{
+	rock:    1,
+	paper:   2,
+	scissor: 3,
 }
 
-var handPoints = map[string]int{
-	"rock":    1,
-	"paper":   2,
-	"scissor": 3,
-}
-
-var convertOpp = map[string]string{
-	"A": "rock",
-	"B": "paper",
-	"C": "scissor",
-}
-
-var convertMine = map[string]string{
-	"X": "rock",
-	"Y": "paper",
-	"Z": "scissor",
+var convertOpp = map[string]int{
+	"A": rock,
+	"B": paper,
+	"C": scissor,
 }
 
 func parta(input [][]string) {
+	var convertMine = map[string]int{
+		"X": rock,
+		"Y": paper,
+		"Z": scissor,
+	}
+
 	sum := 0
 	for _, hands := range input {
 		opp, mine := convertOpp[hands[0]], convertMine[hands[1]]
 		sum += handPoints[mine]
 		if opp == mine {
 			sum += 3
-		} else if winningHand[mine] == opp {
+		} else if handSigns.PrevIndex(mine) == opp {
 			sum += 6
 		}
 	}
@@ -53,25 +56,24 @@ func parta(input [][]string) {
 }
 
 func partb(input [][]string) {
-	losingHand := util.ReverseMap(winningHand)
-
 	sum := 0
 	for _, hands := range input {
 		opp, scenario := convertOpp[hands[0]], hands[1]
-		mine := ""
-		switch scenario {
-		case "X":
-			mine = winningHand[opp]
-		case "Y":
+
+		// convert mine logic
+		mine := 0
+		if scenario == "X" {
+			mine = handSigns.PrevIndex(opp)
+		} else if scenario == "Y" {
 			mine = opp
-		case "Z":
-			mine = losingHand[opp]
+		} else {
+			mine = handSigns.NextIndex(opp)
 		}
 
 		sum += handPoints[mine]
 		if opp == mine {
 			sum += 3
-		} else if winningHand[mine] == opp {
+		} else if handSigns.PrevIndex(mine) == opp {
 			sum += 6
 		}
 	}
