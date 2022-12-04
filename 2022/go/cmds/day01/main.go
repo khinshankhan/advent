@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/khinshankhan/advent/lib/go/cast"
+	"github.com/khinshankhan/advent/lib/go/conv"
 	"github.com/khinshankhan/advent/lib/go/io"
 	"github.com/khinshankhan/advent/lib/go/util"
 )
 
 func main() {
 	rawInput := io.Read2DString("../data/day01.txt", "\n\n", "\n", false)
-	input := cast.From2DStringTo2DInt(rawInput)
+	input := conv.From2DStringTo2DInt(rawInput)
 	parta(input)
 	partb(input)
 }
