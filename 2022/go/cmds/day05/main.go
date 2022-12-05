@@ -14,6 +14,9 @@ import (
 func main() {
 	stacks, cmds := parseInput()
 	parta(stacks, cmds)
+	// because part 1 mutates stacks and im too lazy
+	stacks, cmds = parseInput()
+	partb(stacks, cmds)
 }
 
 func parta(stacks map[rune][]rune, cmds [][][]rune) {
@@ -32,6 +35,38 @@ func parta(stacks map[rune][]rune, cmds [][][]rune) {
 		for addI := len(addTo) - 1; addI > -1; addI-- {
 			newTo = append(newTo, addTo[addI])
 		}
+
+		stacks[fromKey] = newFrom
+		stacks[toKey] = newTo
+	}
+
+	_, orderedStacks := orderedStacksInfo(stacks)
+	s := ""
+	for _, stack := range orderedStacks {
+		if len(stack)-1 < 0 {
+			s += " "
+		} else {
+			s += string(stack[len(stack)-1])
+		}
+	}
+
+	// delimiter !, in case some weird case happens
+	fmt.Println(s + "!")
+}
+
+func partb(stacks map[rune][]rune, cmds [][][]rune) {
+	for _, cmd := range cmds {
+		count := conv.FromStringToInt(string(cmd[0]))
+
+		fromKey := cmd[1][0]
+		toKey := cmd[2][0]
+		from := stacks[fromKey]
+		to := stacks[toKey]
+
+		moveRange := math.Max(0, len(from)-count)
+		newFrom := from[:moveRange]
+		addTo := from[moveRange:]
+		newTo := append(to, addTo...)
 
 		stacks[fromKey] = newFrom
 		stacks[toKey] = newTo
