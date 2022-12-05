@@ -1,23 +1,33 @@
 package math
 
-func MaxInt(nums ...int) int {
-	max := nums[0]
-	for _, e := range nums {
-		if max < e {
-			max = e
-		}
+import "golang.org/x/exp/constraints"
+
+func Max[T constraints.Ordered](nums ...T) T {
+	if len(nums) == 0 {
+		var zero T
+		return zero
 	}
 
-	return max
+	m := nums[0]
+	for _, v := range nums {
+		if m < v {
+			m = v
+		}
+	}
+	return m
 }
 
-func MinInt(nums ...int) int {
-	min := nums[0]
-	for _, e := range nums {
-		if min > e {
-			min = e
-		}
+func Min[T constraints.Ordered](nums ...T) T {
+	if len(nums) == 0 {
+		var zero T
+		return zero
 	}
 
-	return min
+	m := nums[0]
+	for _, v := range nums {
+		if m > v {
+			m = v
+		}
+	}
+	return m
 }

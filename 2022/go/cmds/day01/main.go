@@ -19,8 +19,8 @@ func main() {
 func parta(input [][]int) {
 	m := -1
 	for _, carrying := range input {
-		sum := math.SumInts(carrying...)
-		m = math.MaxInt(m, sum)
+		sum := math.SumNums(carrying...)
+		m = math.Max(m, sum)
 	}
 
 	fmt.Println(m)
@@ -29,13 +29,13 @@ func parta(input [][]int) {
 func partb(input [][]int) {
 	sums := []int{}
 	for _, carrying := range input {
-		sum := math.SumInts(carrying...)
+		sum := math.SumNums(carrying...)
 		sums = append(sums, sum)
 	}
 
 	sort.Ints(sums)
 	top3 := sums[len(sums)-3:]
-	sum := math.SumInts(top3...)
+	sum := math.SumNums(top3...)
 
 	fmt.Println(sum)
 }
