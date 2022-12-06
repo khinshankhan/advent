@@ -6,8 +6,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-
-	"github.com/khinshankhan/advent/lib/go/util"
 )
 
 func ReadFile(pathParts ...string) string {
@@ -28,23 +26,6 @@ func ReadRelativeFile(fname string) string {
 	}
 
 	return ReadFile(dir, fname)
-}
-
-func Read1DString(fname, separator string, skipLast bool) []string {
-	return util.TransformString1D(
-		ReadRelativeFile(fname),
-		separator,
-		skipLast,
-	)
-}
-
-func Read2DString(fname, separator, separator2 string, skipLast bool) [][]string {
-	return util.TransformString2D(
-		ReadRelativeFile(fname),
-		separator,
-		separator2,
-		skipLast,
-	)
 }
 
 func ReadTestFile(pathParts ...string) string {

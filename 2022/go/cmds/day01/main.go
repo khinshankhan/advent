@@ -7,26 +7,33 @@ import (
 	"github.com/khinshankhan/advent/lib/go/conv"
 	"github.com/khinshankhan/advent/lib/go/io"
 	"github.com/khinshankhan/advent/lib/go/math"
+	"github.com/khinshankhan/advent/lib/go/util"
 )
 
 func main() {
-	rawInput := io.Read2DString("../data/day01.txt", "\n\n", "\n", false)
-	input := conv.From2DStringTo2DInt(rawInput)
-	parta(input)
-	partb(input)
+	s := io.ReadRelativeFile("../data/day01.txt")
+	input := parse(s)
+
+	fmt.Println(parta(input))
+	fmt.Println(partb(input))
 }
 
-func parta(input [][]int) {
+func parse(s string) [][]int {
+	ri := util.TransformString2D(s, "\n\n", "\n", true, false)
+	return conv.From2DStringTo2DInt(ri)
+}
+
+func parta(input [][]int) int {
 	m := -1
 	for _, carrying := range input {
 		sum := math.SumNums(carrying...)
 		m = math.Max(m, sum)
 	}
 
-	fmt.Println(m)
+	return m
 }
 
-func partb(input [][]int) {
+func partb(input [][]int) int {
 	sums := []int{}
 	for _, carrying := range input {
 		sum := math.SumNums(carrying...)
@@ -37,5 +44,5 @@ func partb(input [][]int) {
 	top3 := sums[len(sums)-3:]
 	sum := math.SumNums(top3...)
 
-	fmt.Println(sum)
+	return sum
 }

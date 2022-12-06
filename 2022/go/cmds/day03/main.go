@@ -2,15 +2,21 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/khinshankhan/advent/lib/go/io"
 	"github.com/khinshankhan/advent/lib/go/util"
 )
 
 func main() {
-	input := io.Read1DString("../data/day03.txt", "\n", true)
-	parta(input)
-	partb(input)
+	s := io.ReadRelativeFile("../data/day03.txt")
+	input := parse(s)
+	fmt.Println(parta(input))
+	fmt.Println(partb(input))
+}
+
+func parse(s string) []string {
+	return util.TransformString1D(strings.TrimSpace(s), "\n", false)
 }
 
 func runePoint(r rune) int {
@@ -25,7 +31,7 @@ func splitStringEvenly(s string) (string, string) {
 	return s[:midpoint], s[midpoint:]
 }
 
-func parta(input []string) {
+func parta(input []string) int {
 	points := 0
 	for _, rucksack := range input {
 		a, b := splitStringEvenly(rucksack)
@@ -34,10 +40,10 @@ func parta(input []string) {
 			points += runePoint(r)
 		}
 	}
-	fmt.Println(points)
+	return points
 }
 
-func partb(input []string) {
+func partb(input []string) int {
 	points := 0
 	for i := 0; i < len(input); i += 3 {
 		intersection := util.Intersection(
@@ -49,5 +55,5 @@ func partb(input []string) {
 			points += runePoint(r)
 		}
 	}
-	fmt.Println(points)
+	return points
 }

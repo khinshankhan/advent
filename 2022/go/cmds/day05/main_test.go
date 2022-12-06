@@ -40,7 +40,7 @@ func TestDay5(t *testing.T) {
 
 	tests.Run(
 		t,
-		parseInput,
+		parse,
 		parta,
 		partb,
 		util.Eq[string],

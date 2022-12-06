@@ -14,7 +14,7 @@ import (
 
 func main() {
 	s := io.ReadRelativeFile("../data/day05.txt")
-	input := parseInput(s)
+	input := parse(s)
 	input2 := Input{util.CloneMap(input.Stacks, util.Clone1D[rune]), input.Cmds}
 
 	fmt.Println(parta(input))
@@ -116,7 +116,7 @@ func orderedStacksInfo(stacks map[rune][]rune) ([]rune, [][]rune) {
 	return keys, orderedStacks
 }
 
-func parseInput(s string) Input {
+func parse(s string) Input {
 	rawInput := util.TransformString1D(s, "\n\n", false)
 	rawStackInfo := strings.Split(rawInput[0], "\n")
 

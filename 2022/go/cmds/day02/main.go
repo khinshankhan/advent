@@ -2,15 +2,23 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/khinshankhan/advent/lib/go/ds"
 	"github.com/khinshankhan/advent/lib/go/io"
+	"github.com/khinshankhan/advent/lib/go/util"
 )
 
 func main() {
-	input := io.Read2DString("../data/day02.txt", "\n", " ", true)
-	parta(input)
-	partb(input)
+	s := io.ReadRelativeFile("../data/day02.txt")
+	input := parse(s)
+
+	fmt.Println(parta(input))
+	fmt.Println(partb(input))
+}
+
+func parse(s string) [][]string {
+	return util.TransformString2D(strings.TrimSpace(s), "\n", " ", false, false)
 }
 
 const (
@@ -34,7 +42,7 @@ var convertOpp = map[string]int{
 	"C": scissor,
 }
 
-func parta(input [][]string) {
+func parta(input [][]string) int {
 	var convertMine = map[string]int{
 		"X": rock,
 		"Y": paper,
@@ -52,10 +60,10 @@ func parta(input [][]string) {
 		}
 	}
 
-	fmt.Println(sum)
+	return sum
 }
 
-func partb(input [][]string) {
+func partb(input [][]string) int {
 	sum := 0
 	for _, hands := range input {
 		opp, scenario := convertOpp[hands[0]], hands[1]
@@ -78,5 +86,5 @@ func partb(input [][]string) {
 		}
 	}
 
-	fmt.Println(sum)
+	return sum
 }
