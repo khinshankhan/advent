@@ -13,15 +13,23 @@ import (
 )
 
 func main() {
-	rawInput := io.Read1DString("../data/day05.txt", "\n\n", false)
-	stacks, cmds := parseInput(rawInput)
-	stacksClone := util.CloneMap(stacks, util.Clone1D[rune])
+	s := io.ReadRelativeFile("../data/day05.txt")
+	input := parseInput(s)
+	input2 := Input{util.CloneMap(input.Stacks, util.Clone1D[rune]), input.Cmds}
 
-	fmt.Println(parta(stacksClone, cmds))
-	fmt.Println(partb(stacks, cmds))
+	fmt.Println(parta(input))
+	fmt.Println(partb(input2))
 }
 
-func parta(stacks map[rune][]rune, cmds [][][]rune) string {
+type Input struct {
+	Stacks map[rune][]rune
+	Cmds   [][][]rune
+}
+
+func parta(input Input) string {
+	stacks := input.Stacks
+	cmds := input.Cmds
+
 	for _, cmd := range cmds {
 		count := conv.FromStringToInt(string(cmd[0]))
 
@@ -56,7 +64,10 @@ func parta(stacks map[rune][]rune, cmds [][][]rune) string {
 	return s + "!"
 }
 
-func partb(stacks map[rune][]rune, cmds [][][]rune) string {
+func partb(input Input) string {
+	stacks := input.Stacks
+	cmds := input.Cmds
+
 	for _, cmd := range cmds {
 		count := conv.FromStringToInt(string(cmd[0]))
 
@@ -105,7 +116,8 @@ func orderedStacksInfo(stacks map[rune][]rune) ([]rune, [][]rune) {
 	return keys, orderedStacks
 }
 
-func parseInput(rawInput []string) (map[rune][]rune, [][][]rune) {
+func parseInput(s string) Input {
+	rawInput := util.TransformString1D(s, "\n\n", false)
 	rawStackInfo := strings.Split(rawInput[0], "\n")
 
 	// index -> key
@@ -136,5 +148,5 @@ func parseInput(rawInput []string) (map[rune][]rune, [][][]rune) {
 		cmds[i] = runeCmds
 	}
 
-	return stacks, cmds
+	return Input{stacks, cmds}
 }
