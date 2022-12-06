@@ -2,51 +2,59 @@ package test
 
 import "testing"
 
-type TestCase[I any, A any] struct {
+type TestCase[RI any, I any, A any] struct {
 	Name string
 
-	Input I
-	Ans   A
+	Input RI
+	Ans1  A
+	Ans2  A
 
-	First bool
-	Skip  bool
+	Skip1 bool
+	Skip2 bool
 }
 
-func (tc *TestCase[I, A]) Run(
+func (tc *TestCase[RI, I, A]) Run(
 	t *testing.T,
+	parse func(RI) I,
 	p1 func(I) A,
 	p2 func(I) A,
 	eq func(A, A) bool,
+	first bool,
 ) {
 	name := tc.Name
-	if tc.First {
+	if first {
 		name += "Part1"
 	} else {
 		name += "Part2"
 	}
 
 	t.Run(name, func(t *testing.T) {
-		if tc.Skip {
+		if (first && tc.Skip1) || (!first && tc.Skip2) {
 			t.Skip("Input for day doesn't exist")
 		}
 
 		var res A
-		if tc.First {
-			res = p1(tc.Input)
+		var ans A
+		input := parse(tc.Input)
+		if first {
+			res = p1(input)
+			ans = tc.Ans1
 		} else {
-			res = p2(tc.Input)
+			res = p2(input)
+			ans = tc.Ans2
 		}
-		if !eq(tc.Ans, res) {
-			t.Logf("expected: %v, got: %v", tc.Ans, res)
+		if !eq(ans, res) {
+			t.Logf("expected: %v, got: %v", ans, res)
 			t.Fail()
 		}
 	})
 }
 
-type TestCases[I any, A any] []TestCase[I, A]
+type TestCases[RI any, I any, A any] []TestCase[RI, I, A]
 
-func (tcs *TestCases[I, A]) Run(
+func (tcs *TestCases[RI, I, A]) Run(
 	t *testing.T,
+	parse func(RI) I,
 	p1 func(I) A,
 	p2 func(I) A,
 	eq func(A, A) bool,
@@ -54,9 +62,19 @@ func (tcs *TestCases[I, A]) Run(
 	for _, tc := range *tcs {
 		tc.Run(
 			t,
+			parse,
 			p1,
 			p2,
 			eq,
+			true,
+		)
+		tc.Run(
+			t,
+			parse,
+			p1,
+			p2,
+			eq,
+			false,
 		)
 	}
 }

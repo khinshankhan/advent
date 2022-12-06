@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/khinshankhan/advent/lib/go/ds"
@@ -16,20 +15,12 @@ func main() {
 	fmt.Println(partb(s))
 }
 
-func parta(s string) string {
-	pos := findNConsecutiveUnique(4, s)
-	if pos == -1 {
-		return "-1"
-	}
-	return strconv.Itoa(pos + 1)
+func parta(s string) int {
+	return findNConsecutiveUnique(4, s) + 1
 }
 
-func partb(s string) string {
-	pos := findNConsecutiveUnique(14, s)
-	if pos == -1 {
-		return "-1"
-	}
-	return strconv.Itoa(pos + 1)
+func partb(s string) int {
+	return findNConsecutiveUnique(14, s) + 1
 }
 
 func findNConsecutiveUnique(n int, s string) int {
