@@ -17,7 +17,7 @@ func main() {
 }
 
 func parta(s string) string {
-	pos := findNConsectiveUnique(4, s)
+	pos := findNConsecutiveUnique(4, s)
 	if pos == -1 {
 		return "-1"
 	}
@@ -25,14 +25,14 @@ func parta(s string) string {
 }
 
 func partb(s string) string {
-	pos := findNConsectiveUnique(14, s)
+	pos := findNConsecutiveUnique(14, s)
 	if pos == -1 {
 		return "-1"
 	}
 	return strconv.Itoa(pos + 1)
 }
 
-func findNConsectiveUnique(n int, s string) int {
+func findNConsecutiveUnique(n int, s string) int {
 	fm := ds.NewFrequencyMap[rune]()
 	runes := []rune{}
 	for i, r := range s {
