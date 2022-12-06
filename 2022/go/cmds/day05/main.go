@@ -12,14 +12,16 @@ import (
 )
 
 func main() {
-	stacks, cmds := parseInput()
-	parta(stacks, cmds)
+	rawInput := io.Read1DString("../data/day05.txt", "\n\n", false)
+	stacks, cmds := parseInput(rawInput)
+	fmt.Println(parta(stacks, cmds))
 	// because part 1 mutates stacks and im too lazy
-	stacks, cmds = parseInput()
-	partb(stacks, cmds)
+	rawInput = io.Read1DString("../data/day05.txt", "\n\n", false)
+	stacks, cmds = parseInput(rawInput)
+	fmt.Println(partb(stacks, cmds))
 }
 
-func parta(stacks map[rune][]rune, cmds [][][]rune) {
+func parta(stacks map[rune][]rune, cmds [][][]rune) string {
 	for _, cmd := range cmds {
 		count := conv.FromStringToInt(string(cmd[0]))
 
@@ -51,10 +53,10 @@ func parta(stacks map[rune][]rune, cmds [][][]rune) {
 	}
 
 	// delimiter !, in case some weird case happens
-	fmt.Println(s + "!")
+	return s + "!"
 }
 
-func partb(stacks map[rune][]rune, cmds [][][]rune) {
+func partb(stacks map[rune][]rune, cmds [][][]rune) string {
 	for _, cmd := range cmds {
 		count := conv.FromStringToInt(string(cmd[0]))
 
@@ -83,7 +85,7 @@ func partb(stacks map[rune][]rune, cmds [][][]rune) {
 	}
 
 	// delimiter !, in case some weird case happens
-	fmt.Println(s + "!")
+	return s + "!"
 }
 
 func orderedStacksInfo(stacks map[rune][]rune) ([]rune, [][]rune) {
@@ -103,8 +105,7 @@ func orderedStacksInfo(stacks map[rune][]rune) ([]rune, [][]rune) {
 	return keys, orderedStacks
 }
 
-func parseInput() (map[rune][]rune, [][][]rune) {
-	rawInput := io.Read1DString("../data/day05.txt", "\n\n", false)
+func parseInput(rawInput []string) (map[rune][]rune, [][][]rune) {
 	rawStackInfo := strings.Split(rawInput[0], "\n")
 
 	// index -> key

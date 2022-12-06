@@ -1,21 +1,18 @@
 package io
 
 import (
+	"errors"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
+
+	"github.com/khinshankhan/advent/lib/go/util"
 )
 
-func ReadFile(fname string) string {
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		log.Fatal(err)
-		panic(err)
-	}
-
-	b, err := ioutil.ReadFile(filepath.Join(dir, fname))
+func ReadFile(pathParts ...string) string {
+	p := filepath.Join(pathParts...)
+	b, err := ioutil.ReadFile(p)
 	if err != nil {
 		panic(err)
 	}
@@ -23,21 +20,37 @@ func ReadFile(fname string) string {
 	return string(b)
 }
 
-func Read1DString(fname, separator string, skipLast bool) []string {
-	s := ReadFile(fname)
-	rawLines := strings.Split(s, separator)
-
-	if skipLast {
-		return rawLines[:len(rawLines)-1]
+func ReadRelativeFile(fname string) string {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+		panic(err)
 	}
-	return rawLines
+
+	return ReadFile(dir, fname)
+}
+
+func Read1DString(fname, separator string, skipLast bool) []string {
+	return util.TransformString1D(
+		ReadRelativeFile(fname),
+		separator,
+		skipLast,
+	)
 }
 
 func Read2DString(fname, separator, separator2 string, skipLast bool) [][]string {
-	rawLines := Read1DString(fname, separator, skipLast)
-	lines := make([][]string, len(rawLines))
-	for i, l := range rawLines {
-		lines[i] = strings.Split(strings.TrimSpace(l), separator2)
+	return util.TransformString2D(
+		ReadRelativeFile(fname),
+		separator,
+		separator2,
+		skipLast,
+	)
+}
+
+func ReadTestFile(pathParts ...string) string {
+	p := filepath.Join(pathParts...)
+	if _, err := os.Stat(p); errors.Is(err, os.ErrNotExist) {
+		return ""
 	}
-	return lines
+	return ReadFile(p)
 }
