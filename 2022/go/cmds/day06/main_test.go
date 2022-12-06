@@ -2,100 +2,79 @@ package main
 
 import (
 	"testing"
+
+	"github.com/khinshankhan/advent/lib/go/test"
+	"github.com/khinshankhan/advent/lib/go/util"
 )
 
-type TestInfo struct {
-	name  string
-	first bool
-	input string
-	ans   string
-}
-
 func TestDay6(t *testing.T) {
-	tcs := []TestInfo{
+	tests := test.TestCases[string, string]{
 		{
-			name:  "Sample1",
-			first: true,
-			input: "mjqjpqmgbljsphdztnvjfqwrcgsmlb",
-			ans:   "7",
+			Name:  "Sample1",
+			Input: "mjqjpqmgbljsphdztnvjfqwrcgsmlb",
+			Ans:   "7",
+			First: true,
 		},
 		{
-			name:  "Sample2",
-			first: true,
-			input: "bvwbjplbgvbhsrlpgdmjqwftvncz",
-			ans:   "5",
+			Name:  "Sample2",
+			Input: "bvwbjplbgvbhsrlpgdmjqwftvncz",
+			Ans:   "5",
+			First: true,
 		},
 		{
-			name:  "Sample3",
-			first: true,
-			input: "nppdvjthqldpwncqszvftbrmjlhg",
-			ans:   "6",
+			Name:  "Sample3",
+			Input: "nppdvjthqldpwncqszvftbrmjlhg",
+			Ans:   "6",
+			First: true,
 		},
 		{
-			name:  "Sample4",
-			first: true,
-			input: "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg",
-			ans:   "10",
+			Name:  "Sample4",
+			Input: "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg",
+			Ans:   "10",
+			First: true,
 		},
 		{
-			name:  "Sample5",
-			first: true,
-			input: "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw",
-			ans:   "11",
+			Name:  "Sample5",
+			Input: "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw",
+			Ans:   "11",
+			First: true,
 		},
 		{
-			name:  "Sample1",
-			first: false,
-			input: "mjqjpqmgbljsphdztnvjfqwrcgsmlb",
-			ans:   "19",
+			Name:  "Sample1",
+			Input: "mjqjpqmgbljsphdztnvjfqwrcgsmlb",
+			Ans:   "19",
+			First: false,
 		},
 		{
-			name:  "Sample2",
-			first: false,
-			input: "bvwbjplbgvbhsrlpgdmjqwftvncz",
-			ans:   "23",
+			Name:  "Sample2",
+			Input: "bvwbjplbgvbhsrlpgdmjqwftvncz",
+			Ans:   "23",
+			First: false,
 		},
 		{
-			name:  "Sample3",
-			first: false,
-			input: "nppdvjthqldpwncqszvftbrmjlhg",
-			ans:   "23",
+			Name:  "Sample3",
+			Input: "nppdvjthqldpwncqszvftbrmjlhg",
+			Ans:   "23",
+			First: false,
 		},
 		{
-			name:  "Sample4",
-			first: false,
-			input: "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg",
-			ans:   "29",
+			Name:  "Sample4",
+			Input: "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg",
+			Ans:   "29",
+			First: false,
 		},
 		{
-			name:  "Sample5",
-			first: false,
-			input: "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw",
-			ans:   "26",
+			Name:  "Sample5",
+			Input: "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw",
+			Ans:   "26",
+			First: false,
 		},
 	}
 
-	for _, tc := range tcs {
-		name := tc.name
-		if tc.first {
-			name += "Part1"
-		} else {
-			name += "Part2"
-		}
-		t.Run(name, func(t *testing.T) {
-			if tc.input == "" {
-				t.Skip("Input for day doesn't exist")
-			}
-			var res string
-			if tc.first {
-				res = parta(tc.input)
-			} else {
-				res = partb(tc.input)
-			}
-
-			if tc.ans != res {
-				t.Fatalf("expected: %v, got: %v", tc.ans, res)
-			}
-		})
-	}
+	tests.Run(
+		t,
+		parta,
+		partb,
+		util.Eq[string],
+	)
 }
