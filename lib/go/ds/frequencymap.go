@@ -38,21 +38,13 @@ func (fm *FrequencyMap[T]) Subtract(key T) int {
 }
 
 func (fm *FrequencyMap[T]) SubtractOrDelete(key T) int {
-	newCount := -1
-	count, has := fm.Get(key)
-	if has {
-		newCount = count - 1
-	}
-
-	if newCount > 0 {
-		fm.m[key] = newCount
-		return newCount
-	}
-
-	if has {
+	count := fm.Subtract(key)
+	if count < 1 {
 		fm.Remove(key)
+		return -1
 	}
-	return -1
+
+	return count
 }
 
 func (fm *FrequencyMap[T]) Remove(key T) {
