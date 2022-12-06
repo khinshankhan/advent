@@ -28,3 +28,11 @@ func FrequencyMap[T comparable](iterable []T) map[T]int {
 
 	return freqs
 }
+
+func CloneMap[K comparable, V any](m map[K]V, clone func(V) V) map[K]V {
+	c := make(map[K]V, len(m))
+	for k, v := range m {
+		c[k] = clone(v)
+	}
+	return c
+}

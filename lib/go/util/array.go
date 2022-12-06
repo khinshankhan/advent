@@ -29,3 +29,19 @@ func Intersection[T comparable](lists ...[]T) []T {
 func Unique[T comparable](list []T) []T {
 	return ds.NewSet(list...).GetKeys()
 }
+
+func Clone1D[T comparable](list []T) []T {
+	ret := make([]T, len(list))
+	for i, e := range list {
+		ret[i] = e
+	}
+	return ret
+}
+
+func Clone2D[T comparable](list [][]T) [][]T {
+	ret := make([][]T, len(list))
+	for i, e := range list {
+		ret[i] = Clone1D(e)
+	}
+	return ret
+}

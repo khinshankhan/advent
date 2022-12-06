@@ -9,15 +9,15 @@ import (
 	"github.com/khinshankhan/advent/lib/go/io"
 	"github.com/khinshankhan/advent/lib/go/math"
 	"github.com/khinshankhan/advent/lib/go/types"
+	"github.com/khinshankhan/advent/lib/go/util"
 )
 
 func main() {
 	rawInput := io.Read1DString("../data/day05.txt", "\n\n", false)
 	stacks, cmds := parseInput(rawInput)
-	fmt.Println(parta(stacks, cmds))
-	// because part 1 mutates stacks and im too lazy
-	rawInput = io.Read1DString("../data/day05.txt", "\n\n", false)
-	stacks, cmds = parseInput(rawInput)
+	stacksClone := util.CloneMap(stacks, util.Clone1D[rune])
+
+	fmt.Println(parta(stacksClone, cmds))
 	fmt.Println(partb(stacks, cmds))
 }
 
