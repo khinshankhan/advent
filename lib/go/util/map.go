@@ -17,16 +17,7 @@ func ExistenceMap[T comparable](iterable []T) map[T]struct{} {
 }
 
 func FrequencyMap[T comparable](iterable []T) map[T]int {
-	freqs := make(map[T]int)
-	for _, e := range iterable {
-		if count, ok := freqs[e]; ok {
-			freqs[e] = count + 1
-		} else {
-			freqs[e] = 1
-		}
-	}
-
-	return freqs
+	return ds.NewFrequencyMap(iterable...).GetMap()
 }
 
 func CloneMap[K comparable, V any](m map[K]V, clone func(V) V) map[K]V {
