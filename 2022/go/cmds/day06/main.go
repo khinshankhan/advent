@@ -13,22 +13,39 @@ func main() {
 	input := io.ReadRelativeFile("../data/day06.txt")
 	s := strings.TrimSpace(input)
 	fmt.Println(parta(s))
+	fmt.Println(partb(s))
 }
 
 func parta(s string) string {
+	pos := findNConsectiveUnique(4, s)
+	if pos == -1 {
+		return "-1"
+	}
+	return strconv.Itoa(pos + 1)
+}
+
+func partb(s string) string {
+	pos := findNConsectiveUnique(14, s)
+	if pos == -1 {
+		return "-1"
+	}
+	return strconv.Itoa(pos + 1)
+}
+
+func findNConsectiveUnique(n int, s string) int {
 	fm := ds.NewFrequencyMap[rune]()
 	runes := []rune{}
 	for i, r := range s {
 		fm.Add(r)
-		if len(fm.GetMap()) == 4 {
-			return strconv.Itoa(i + 1)
+		if len(fm.GetMap()) == n {
+			return i
 		}
 
 		runes = append(runes, r)
-		if i > 2 {
-			fm.SubtractOrDelete(runes[i-3])
+		if i > n-2 {
+			fm.SubtractOrDelete(runes[i-n+1])
 		}
 	}
 
-	return "-1"
+	return -1
 }
