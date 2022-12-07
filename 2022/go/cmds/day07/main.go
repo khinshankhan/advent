@@ -24,9 +24,10 @@ type File struct {
 	Size int
 }
 type FsNode struct {
-	Name  string
-	Files []File
-	Dirs  []string
+	Name          string
+	Files         []File
+	Dirs          []string
+	RecursiveSize int
 }
 
 func SubDirName(p, c string) string {
@@ -80,47 +81,44 @@ func parse(s string) map[string]FsNode {
 		}
 	}
 
-	return fs
-}
-
-func getDirSizes(fs map[string]FsNode) map[string]File {
-	dirs := []string{}
+	dirNames := []string{}
 	for n := range fs {
-		dirs = append(dirs, n)
+		dirNames = append(dirNames, n)
 	}
 
-	sort.Slice(dirs, func(i, j int) bool {
-		l1, l2 := len(dirs[i]), len(dirs[j])
+	// ensure 'innermost' dirs are listed first, which will help 'build up'
+	// since they shouldn't have nested dirs, creating 'base cases'
+	sort.Slice(dirNames, func(i, j int) bool {
+		l1, l2 := len(dirNames[i]), len(dirNames[j])
 		if l1 != l2 {
 			return l1 > l2
 		}
-		return dirs[i] > dirs[j]
+		return dirNames[i] > dirNames[j]
 	})
 
-	dirSizes := make(map[string]File)
-	for _, key := range dirs {
-		sz := 0
-		for _, dir := range fs[key].Dirs {
-			file := dirSizes[SubDirName(key, dir)]
-			sz += file.Size
+	for _, dirName := range dirNames {
+		rsz := 0
+		for _, file := range fs[dirName].Files {
+			rsz += file.Size
 		}
-		for _, file := range fs[key].Files {
-			sz += file.Size
+		for _, dir := range fs[dirName].Dirs {
+			file := fs[SubDirName(dirName, dir)]
+			rsz += file.RecursiveSize
 		}
 
-		dirSizes[key] = File{key, sz}
+		updatedDir := fs[dirName]
+		updatedDir.RecursiveSize = rsz
+		fs[dirName] = updatedDir
 	}
 
-	return dirSizes
+	return fs
 }
 
 func parta(fs map[string]FsNode) int {
-	dirSizes := getDirSizes(fs)
-
 	sum := 0
-	for _, dir := range dirSizes {
-		if dir.Size <= 100000 {
-			sum += dir.Size
+	for _, dir := range fs {
+		if dir.RecursiveSize <= 100000 {
+			sum += dir.RecursiveSize
 		}
 	}
 
@@ -128,13 +126,12 @@ func parta(fs map[string]FsNode) int {
 }
 
 func partb(fs map[string]FsNode) int {
-	szs := getDirSizes(fs)
-	needed := (70000000 - 30000000 - szs["/"].Size) * -1
+	needed := (70000000 - 30000000 - fs["/"].RecursiveSize) * -1
 
 	acceptable := []int{}
-	for _, dir := range szs {
-		if dir.Size >= needed {
-			acceptable = append(acceptable, dir.Size)
+	for _, dir := range fs {
+		if dir.RecursiveSize >= needed {
+			acceptable = append(acceptable, dir.RecursiveSize)
 		}
 	}
 
