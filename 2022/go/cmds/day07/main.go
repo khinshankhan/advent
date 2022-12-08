@@ -5,7 +5,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/khinshankhan/advent/lib/go/conv"
 	"github.com/khinshankhan/advent/lib/go/io"
 	"github.com/khinshankhan/advent/lib/go/math"
 	"github.com/khinshankhan/advent/lib/go/util"
@@ -72,7 +71,7 @@ func parse(s string) map[string]FsNode {
 				if info[0] == "dir" {
 					n.Dirs = append(n.Dirs, info[1])
 				} else {
-					sz := conv.FromStringToInt(info[0])
+					sz := util.FromStringToInt(info[0])
 					file := File{info[1], sz}
 					n.Files = append(n.Files, file)
 				}

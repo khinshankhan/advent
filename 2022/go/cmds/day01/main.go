@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/khinshankhan/advent/lib/go/conv"
 	"github.com/khinshankhan/advent/lib/go/io"
 	"github.com/khinshankhan/advent/lib/go/math"
 	"github.com/khinshankhan/advent/lib/go/util"
@@ -20,7 +19,7 @@ func main() {
 
 func parse(s string) [][]int {
 	ri := util.TransformString2D(s, "\n\n", "\n", true, false)
-	return conv.From2DStringTo2DInt(ri)
+	return util.From2DStringTo2DInt(ri)
 }
 
 func parta(input [][]int) int {

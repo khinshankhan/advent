@@ -5,7 +5,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/khinshankhan/advent/lib/go/conv"
 	"github.com/khinshankhan/advent/lib/go/io"
 	"github.com/khinshankhan/advent/lib/go/math"
 	"github.com/khinshankhan/advent/lib/go/types"
@@ -31,7 +30,7 @@ func parta(input Input) string {
 	cmds := input.Cmds
 
 	for _, cmd := range cmds {
-		count := conv.FromStringToInt(string(cmd[0]))
+		count := util.FromStringToInt(string(cmd[0]))
 
 		fromKey := cmd[1][0]
 		toKey := cmd[2][0]
@@ -69,7 +68,7 @@ func partb(input Input) string {
 	cmds := input.Cmds
 
 	for _, cmd := range cmds {
-		count := conv.FromStringToInt(string(cmd[0]))
+		count := util.FromStringToInt(string(cmd[0]))
 
 		fromKey := cmd[1][0]
 		toKey := cmd[2][0]
@@ -144,7 +143,7 @@ func parse(s string) Input {
 	cmds := make([][][]rune, len(cmdsInfo))
 	for i, e := range cmdsInfo {
 		parts := strings.Split(e, " ")
-		runeCmds := conv.From1DStringTo2DRune([]string{parts[1], parts[3], parts[5]})
+		runeCmds := util.From1DStringTo2DRune([]string{parts[1], parts[3], parts[5]})
 		cmds[i] = runeCmds
 	}
 
