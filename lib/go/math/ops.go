@@ -1,13 +1,21 @@
 package math
 
 import (
-	"golang.org/x/exp/constraints"
+	"github.com/khinshankhan/advent/lib/go/types"
 )
 
-func SumNums[T constraints.Ordered](nums ...T) T {
-	var sum T
+func SumNums[T types.Number](nums ...T) T {
+	sum := T(SumIdentity)
 	for _, num := range nums {
 		sum += num
 	}
 	return sum
+}
+
+func ProductNums[T types.Number](nums ...T) T {
+	product := T(ProductIdentity)
+	for _, num := range nums {
+		product = product * num
+	}
+	return product
 }

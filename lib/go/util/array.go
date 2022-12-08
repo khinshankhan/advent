@@ -124,3 +124,11 @@ func Reduce1DWithIndexAndList[T any, U any](fn func(U, T, int, []T) U, list []T,
 	}
 	return acc
 }
+
+func Reverse1D[T any](list []T) []T {
+	ret := make([]T, len(list))
+	for i := range list {
+		ret[i] = list[len(list)-i-1]
+	}
+	return ret
+}
