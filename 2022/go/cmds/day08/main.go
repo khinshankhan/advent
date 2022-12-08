@@ -59,15 +59,12 @@ func getVisibles(heights [][]int) [][]bool {
 		for j := len(heights[i]) - 1; j > -1; j-- {
 			visible := visibles[i][j]
 
-			if i == 0 || heights[i][j] > tallestCol[j] {
+			if i == len(heights)-1 || heights[i][j] > tallestCol[j] {
 				tallestCol[j] = heights[i][j]
 				visible = true
 			}
-			if j == 0 || heights[i][j] > tallestRight {
+			if j == len(heights[i])-1 || heights[i][j] > tallestRight {
 				tallestRight = heights[i][j]
-				visible = true
-			}
-			if i == len(heights)-1 || j == len(heights[i])-1 {
 				visible = true
 			}
 
