@@ -47,6 +47,8 @@ func TestDay7(t *testing.T) {
 			Input: s,
 			Ans1:  1423358,
 			Ans2:  545729,
+			Skip1: s == "",
+			Skip2: s == "",
 		},
 	}
 
