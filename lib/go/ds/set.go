@@ -34,6 +34,10 @@ func (set *Set[T]) Has(key T) bool {
 	return ok
 }
 
+func (set *Set[T]) Len() int {
+	return len(set.m)
+}
+
 func (set *Set[T]) GetKeys() []T {
 	if set.synced {
 		return set.keys
