@@ -18,7 +18,7 @@ CrZsJsPPZsGzwwsLwLmpwMDw`
 func TestDay3(t *testing.T) {
 	s := io.ReadTestFile("..", "..", "data", "day03.txt")
 
-	tests := test.TestCases[string, []string, int]{
+	tests := test.TestCases[[]string, int, int]{
 		{
 			Name:  "Sample",
 			Input: sample,
@@ -40,6 +40,7 @@ func TestDay3(t *testing.T) {
 		parse,
 		parta,
 		partb,
+		util.Eq[int],
 		util.Eq[int],
 	)
 }

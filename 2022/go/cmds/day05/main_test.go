@@ -21,7 +21,7 @@ move 1 from 1 to 2`
 func TestDay5(t *testing.T) {
 	s := io.ReadTestFile("..", "..", "data", "day05.txt")
 
-	tests := test.TestCases[string, Input, string]{
+	tests := test.TestCases[Input, string, string]{
 		{
 			Name:  "Sample",
 			Input: sample,
@@ -43,6 +43,7 @@ func TestDay5(t *testing.T) {
 		parse,
 		parta,
 		partb,
+		util.Eq[string],
 		util.Eq[string],
 	)
 }

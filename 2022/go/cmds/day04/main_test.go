@@ -18,7 +18,7 @@ var sample = `2-4,6-8
 func TestDay4(t *testing.T) {
 	s := io.ReadTestFile("..", "..", "data", "day04.txt")
 
-	tests := test.TestCases[string, [][]string, int]{
+	tests := test.TestCases[[][]string, int, int]{
 		{
 			Name:  "Sample",
 			Input: sample,
@@ -40,6 +40,7 @@ func TestDay4(t *testing.T) {
 		parse,
 		parta,
 		partb,
+		util.Eq[int],
 		util.Eq[int],
 	)
 }

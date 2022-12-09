@@ -14,7 +14,7 @@ func TestDay6(t *testing.T) {
 	input := io.ReadTestFile("..", "..", "data", "day06.txt")
 	s := strings.TrimSpace(input)
 
-	tests := test.TestCases[string, string, int]{
+	tests := test.TestCases[string, int, int]{
 		{
 			Name:  "Sample1",
 			Input: "mjqjpqmgbljsphdztnvjfqwrcgsmlb",
@@ -60,6 +60,7 @@ func TestDay6(t *testing.T) {
 		math.Identity[string],
 		parta,
 		partb,
+		util.Eq[int],
 		util.Eq[int],
 	)
 }

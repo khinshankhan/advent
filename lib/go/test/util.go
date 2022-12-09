@@ -1,24 +1,28 @@
 package test
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
-type TestCase[RI any, I any, A any] struct {
+type TestCase[I any, A any, A2 any] struct {
 	Name string
 
-	Input RI
+	Input string
 	Ans1  A
-	Ans2  A
+	Ans2  A2
 
 	Skip1 bool
 	Skip2 bool
 }
 
-func (tc *TestCase[RI, I, A]) Run(
+func (tc *TestCase[I, A, A2]) Run(
 	t *testing.T,
-	parse func(RI) I,
+	parse func(string) I,
 	p1 func(I) A,
-	p2 func(I) A,
+	p2 func(I) A2,
 	eq func(A, A) bool,
+	eq2 func(A2, A2) bool,
 	first bool,
 ) {
 	name := tc.Name
@@ -29,35 +33,42 @@ func (tc *TestCase[RI, I, A]) Run(
 	}
 
 	t.Run(name, func(t *testing.T) {
-		if (first && tc.Skip1) || (!first && tc.Skip2) {
+		skip := (first && tc.Skip1) || (!first && tc.Skip2)
+		if skip && tc.Input == "" {
 			t.Skip("Input for day doesn't exist")
 		}
+		if skip {
+			t.Skip(fmt.Sprintf("Purposefully skipping %s", name))
+		}
 
-		var res A
-		var ans A
 		input := parse(tc.Input)
 		if first {
-			res = p1(input)
-			ans = tc.Ans1
+			res := p1(input)
+			ans := tc.Ans1
+			if !eq(ans, res) {
+				t.Logf("expected: %v, got: %v", ans, res)
+				t.Fail()
+			}
 		} else {
-			res = p2(input)
-			ans = tc.Ans2
-		}
-		if !eq(ans, res) {
-			t.Logf("expected: %v, got: %v", ans, res)
-			t.Fail()
+			res := p2(input)
+			ans := tc.Ans2
+			if !eq2(ans, res) {
+				t.Logf("expected: %v, got: %v", ans, res)
+				t.Fail()
+			}
 		}
 	})
 }
 
-type TestCases[RI any, I any, A any] []TestCase[RI, I, A]
+type TestCases[I any, A any, A2 any] []TestCase[I, A, A2]
 
-func (tcs *TestCases[RI, I, A]) Run(
+func (tcs *TestCases[I, A, A2]) Run(
 	t *testing.T,
-	parse func(RI) I,
+	parse func(string) I,
 	p1 func(I) A,
-	p2 func(I) A,
+	p2 func(I) A2,
 	eq func(A, A) bool,
+	eq2 func(A2, A2) bool,
 ) {
 	for _, tc := range *tcs {
 		tc.Run(
@@ -66,6 +77,7 @@ func (tcs *TestCases[RI, I, A]) Run(
 			p1,
 			p2,
 			eq,
+			eq2,
 			true,
 		)
 		tc.Run(
@@ -74,6 +86,7 @@ func (tcs *TestCases[RI, I, A]) Run(
 			p1,
 			p2,
 			eq,
+			eq2,
 			false,
 		)
 	}

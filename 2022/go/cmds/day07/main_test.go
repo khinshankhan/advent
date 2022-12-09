@@ -35,7 +35,7 @@ $ ls
 func TestDay7(t *testing.T) {
 	s := io.ReadTestFile("..", "..", "data", "day07.txt")
 
-	tests := test.TestCases[string, map[string]FsNode, int]{
+	tests := test.TestCases[map[string]FsNode, int, int]{
 		{
 			Name:  "Sample",
 			Input: sample,
@@ -57,6 +57,7 @@ func TestDay7(t *testing.T) {
 		parse,
 		parta,
 		partb,
+		util.Eq[int],
 		util.Eq[int],
 	)
 }
