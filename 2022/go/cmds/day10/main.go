@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 
@@ -25,8 +26,7 @@ func parse(s string) [][]string {
 func parta(input [][]string) (interesting int) {
 	interestingCyles := ds.NewSet(20, 60, 100, 140, 180, 220)
 
-	cycle := 0
-	strength := 1
+	cycle, strength := 0, 1
 	tick := func() {
 		cycle += 1
 		if interestingCyles.Has(cycle) {
@@ -49,20 +49,19 @@ func parta(input [][]string) (interesting int) {
 }
 
 func partb(input [][]string) string {
-	msg := ""
+	var crt bytes.Buffer
 
-	cycle := 0
-	sprite := 2
+	cycle, sprite := 0, 2
 	tick := func() {
 		cycle += 1
-		crtpos := cycle % 40
+		crtpos := (cycle-1)%40 + 1
 		if crtpos == 1 && cycle != 1 {
-			msg += "\n"
+			crt.WriteString("\n")
 		}
 		if math.Abs(sprite-crtpos) <= 1 {
-			msg += "#"
+			crt.WriteString("#")
 		} else {
-			msg += "."
+			crt.WriteString(".")
 		}
 	}
 
@@ -77,5 +76,5 @@ func partb(input [][]string) string {
 		}
 	}
 
-	return msg
+	return crt.String()
 }

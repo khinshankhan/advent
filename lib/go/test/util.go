@@ -46,14 +46,14 @@ func (tc *TestCase[I, A, A2]) Run(
 			res := p1(input)
 			ans := tc.Ans1
 			if !eq(ans, res) {
-				t.Logf("expected: %v, got: %v", ans, res)
+				t.Logf("\nexpected:\n%v\ngot:\n%v", ans, res)
 				t.Fail()
 			}
 		} else {
 			res := p2(input)
 			ans := tc.Ans2
 			if !eq2(ans, res) {
-				t.Logf("expected: %v, got: %v", ans, res)
+				t.Logf("\nexpected:\n%v\ngot:\n%v", ans, res)
 				t.Fail()
 			}
 		}
