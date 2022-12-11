@@ -44,10 +44,9 @@ func calcUniqueTailPositions(ropeLength int, input [][]string) int {
 	for _, line := range input {
 		d, n := line[0], util.FromStringToInt(line[1])
 		for m := 0; m < n; m++ {
-			for i := 0; i < len(rope); i++ {
-				if i == 0 {
-					rope[0] = rope[0].Add(moves[d])
-				} else if math.ChebyshevDistance(rope[i-1], rope[i]) > 1 {
+			rope[0] = rope[0].Add(moves[d])
+			for i := 1; i < len(rope); i++ {
+				if math.ChebyshevDistance(rope[i-1], rope[i]) > 1 {
 					rope[i] = math.ChebyshevMove(rope[i], rope[i-1])
 				}
 			}

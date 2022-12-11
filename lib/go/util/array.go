@@ -32,9 +32,7 @@ func Unique[T comparable](list []T) []T {
 
 func Clone1D[T comparable](list []T) []T {
 	ret := make([]T, len(list))
-	for i, e := range list {
-		ret[i] = e
-	}
+	copy(ret, list)
 	return ret
 }
 
@@ -127,8 +125,8 @@ func Reduce1DWithIndexAndList[T any, U any](fn func(U, T, int, []T) U, list []T,
 
 func Reverse1D[T any](list []T) []T {
 	ret := make([]T, len(list))
-	for i := range list {
-		ret[i] = list[len(list)-i-1]
+	for l, r := 0, len(list)-1; l <= r; l, r = l+1, r-1 {
+		ret[l], ret[r] = list[r], list[l]
 	}
 	return ret
 }

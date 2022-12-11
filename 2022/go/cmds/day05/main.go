@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"sort"
 	"strings"
@@ -26,76 +27,59 @@ type Input struct {
 }
 
 func parta(input Input) string {
-	stacks := input.Stacks
-	cmds := input.Cmds
+	stacks, cmds := input.Stacks, input.Cmds
 
 	for _, cmd := range cmds {
 		count := util.FromStringToInt(string(cmd[0]))
 
-		fromKey := cmd[1][0]
-		toKey := cmd[2][0]
-		from := stacks[fromKey]
-		to := stacks[toKey]
+		fromKey, toKey := cmd[1][0], cmd[2][0]
+		from, to := stacks[fromKey], stacks[toKey]
 
 		moveRange := math.Max(0, len(from)-count)
-		newFrom := from[:moveRange]
-		addTo := from[moveRange:]
+		newFrom, addTo := from[:moveRange], from[moveRange:]
 		newTo := to
 		for addI := len(addTo) - 1; addI > -1; addI-- {
 			newTo = append(newTo, addTo[addI])
 		}
 
-		stacks[fromKey] = newFrom
-		stacks[toKey] = newTo
-	}
-
-	_, orderedStacks := orderedStacksInfo(stacks)
-	s := ""
-	for _, stack := range orderedStacks {
-		if len(stack)-1 < 0 {
-			s += " "
-		} else {
-			s += string(stack[len(stack)-1])
-		}
+		stacks[fromKey], stacks[toKey] = newFrom, newTo
 	}
 
 	// delimiter !, in case some weird case happens
-	return s + "!"
+	return stacksMsg(stacks) + "!"
 }
 
 func partb(input Input) string {
-	stacks := input.Stacks
-	cmds := input.Cmds
+	stacks, cmds := input.Stacks, input.Cmds
 
 	for _, cmd := range cmds {
 		count := util.FromStringToInt(string(cmd[0]))
 
-		fromKey := cmd[1][0]
-		toKey := cmd[2][0]
-		from := stacks[fromKey]
-		to := stacks[toKey]
+		fromKey, toKey := cmd[1][0], cmd[2][0]
+		from, to := stacks[fromKey], stacks[toKey]
 
 		moveRange := math.Max(0, len(from)-count)
-		newFrom := from[:moveRange]
-		addTo := from[moveRange:]
+		newFrom, addTo := from[:moveRange], from[moveRange:]
 		newTo := append(to, addTo...)
 
-		stacks[fromKey] = newFrom
-		stacks[toKey] = newTo
-	}
-
-	_, orderedStacks := orderedStacksInfo(stacks)
-	s := ""
-	for _, stack := range orderedStacks {
-		if len(stack)-1 < 0 {
-			s += " "
-		} else {
-			s += string(stack[len(stack)-1])
-		}
+		stacks[fromKey], stacks[toKey] = newFrom, newTo
 	}
 
 	// delimiter !, in case some weird case happens
-	return s + "!"
+	return stacksMsg(stacks) + "!"
+}
+
+func stacksMsg(stacks map[rune][]rune) string {
+	_, orderedStacks := orderedStacksInfo(stacks)
+	var s bytes.Buffer
+	for _, stack := range orderedStacks {
+		if len(stack)-1 < 0 {
+			s.WriteRune(' ')
+		} else {
+			s.WriteRune(stack[len(stack)-1])
+		}
+	}
+	return s.String()
 }
 
 func orderedStacksInfo(stacks map[rune][]rune) ([]rune, [][]rune) {

@@ -28,7 +28,7 @@ func findNConsecutiveUnique(n int, s string) int {
 	runes := []rune{}
 	for i, r := range s {
 		fm.Add(r)
-		if len(fm.GetMap()) == n {
+		if fm.Len() == n {
 			return i
 		}
 

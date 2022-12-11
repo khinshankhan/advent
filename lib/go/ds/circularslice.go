@@ -8,15 +8,17 @@ func NewCircularSlice[T comparable](initial ...T) *CircularSlice[T] {
 	cs := CircularSlice[T]{}
 
 	cs.slice = make([]T, len(initial))
-	for i, e := range initial {
-		cs.slice[i] = e
-	}
+	copy(cs.slice, initial)
 
 	return &cs
 }
 
 func (cs *CircularSlice[T]) Append(e T) {
 	cs.slice = append(cs.slice, e)
+}
+
+func (cs *CircularSlice[T]) Len() int {
+	return len(cs.slice)
 }
 
 func (cs *CircularSlice[T]) FindIndex(fn func(T) bool) int {

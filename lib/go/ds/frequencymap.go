@@ -59,3 +59,7 @@ func (fm *FrequencyMap[T]) Get(key T) (int, bool) {
 func (fm *FrequencyMap[T]) GetMap() map[T]int {
 	return fm.m
 }
+
+func (fm *FrequencyMap[T]) Len() int {
+	return len(fm.m)
+}
