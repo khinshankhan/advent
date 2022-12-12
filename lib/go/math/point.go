@@ -2,6 +2,19 @@ package math
 
 import "image"
 
+var (
+	ManhattanMoves = []image.Point{
+		// u, d, r, l
+		{0, 1}, {0, -1}, {1, 0}, {-1, 0},
+	}
+	ChebyshevMoves = []image.Point{
+		// u, d, r, l
+		{0, 1}, {0, -1}, {1, 0}, {-1, 0},
+		// ur, dr, ul, dl
+		{1, 1}, {1, -1}, {-1, 1}, {-1, -1},
+	}
+)
+
 func ClonePoint(pt image.Point) image.Point {
 	return image.Point{pt.X, pt.Y}
 }

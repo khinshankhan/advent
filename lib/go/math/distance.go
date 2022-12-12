@@ -2,6 +2,10 @@ package math
 
 import "image"
 
-func ChebyshevDistance(pt1, pt2 image.Point) int {
-	return Max(Abs(pt1.X-pt2.X), Abs(pt1.Y-pt2.Y))
+func ManhattanDistance(p1, p2 image.Point) int {
+	return Abs(p1.X-p2.X) + Abs(p1.Y-p2.Y)
+}
+
+func ChebyshevDistance(p1, p2 image.Point) int {
+	return Max(Abs(p1.X-p2.X), Abs(p1.Y-p2.Y))
 }
