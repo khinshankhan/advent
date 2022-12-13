@@ -30,11 +30,10 @@ func partb(input Input) int {
 func calc(input Input, part2 bool) int {
 	// small trick, it's probably easier to go end to start because of constraints
 	// even better for part 2 since we dont need to complete getting to the end
-	start, end, dist := input.E, input.S, make(map[image.Point]int, input.Grid.Len())
-	queue, seen := []image.Point{start}, ds.NewSet(start)
+	start, end := input.E, input.S
+	queue, dist := []image.Point{start}, make(map[image.Point]int, input.Grid.Len())
 
-	shortestStart := start
-	startVal := runePoint('a')
+	shortestStart, startVal := start, runePoint('a')
 	for len(queue) > 0 {
 		c := queue[0]
 		queue = queue[1:]
@@ -45,9 +44,9 @@ func calc(input Input, part2 bool) int {
 		}
 		neighbors := input.Grid.GetNeighbors(math.ManhattanMoves, c)
 		for _, neighbor := range neighbors {
-			if !seen.Has(neighbor) && input.IsTravserable(c, neighbor) {
+			_, seen := dist[neighbor]
+			if !seen && input.Grid.Get(c) < input.Grid.Get(neighbor)+2 {
 				queue, dist[neighbor] = append(queue, neighbor), dist[c]+1
-				seen.Add(neighbor)
 			}
 
 			// short circuit, minor optimization
@@ -67,10 +66,6 @@ func calc(input Input, part2 bool) int {
 type Input struct {
 	Grid *ds.PointGrid[int]
 	S, E image.Point
-}
-
-func (input *Input) IsTravserable(p1, p2 image.Point) bool {
-	return input.Grid.Get(p1) < input.Grid.Get(p2)+2
 }
 
 func runePoint(r rune) int {
