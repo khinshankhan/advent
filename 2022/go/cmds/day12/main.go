@@ -33,12 +33,12 @@ func calc(input Input, part2 bool) int {
 	start, end := input.E, input.S
 	queue, dist := []image.Point{start}, make(map[image.Point]int, input.Grid.Len())
 
-	shortestStart, startVal := start, runePoint('a')
+	shortestStart := start
 	for len(queue) > 0 {
 		c := queue[0]
 		queue = queue[1:]
 
-		if part2 && startVal == input.Grid.Get(c) {
+		if part2 && 'a' == input.Grid.Get(c) {
 			shortestStart = c
 			break
 		}
@@ -64,35 +64,26 @@ func calc(input Input, part2 bool) int {
 }
 
 type Input struct {
-	Grid *ds.PointGrid[int]
+	Grid *ds.PointGrid[rune]
 	S, E image.Point
-}
-
-func runePoint(r rune) int {
-	switch r {
-	case 'S':
-		return 0
-	case 'E':
-		return 27
-	}
-
-	return int(r-'a') + 1
 }
 
 func parse(s string) (ret Input) {
 	alphaHeights := strings.Fields(s)
-	ret.Grid = ds.NewPointGrid[int](len(alphaHeights), len(alphaHeights[0]))
+	ret.Grid = ds.NewPointGrid[rune](len(alphaHeights), len(alphaHeights[0]))
 
 	for y, line := range alphaHeights {
 		for x, r := range line {
 			point := image.Point{x, y}
+			ret.Grid.Set(point, r)
 			switch r {
 			case 'S':
 				ret.S = point
+				ret.Grid.Set(point, 'a')
 			case 'E':
 				ret.E = point
+				ret.Grid.Set(point, 'z'+1)
 			}
-			ret.Grid.Set(point, runePoint(r))
 		}
 	}
 
