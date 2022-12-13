@@ -33,13 +33,12 @@ func calc(input Input, part2 bool) int {
 	start, end := input.E, input.S
 	queue, dist := []image.Point{start}, make(map[image.Point]int, input.Grid.Len())
 
-	shortestStart := start
 	for len(queue) > 0 {
 		c := queue[0]
 		queue = queue[1:]
 
 		if part2 && 'a' == input.Grid.Get(c) {
-			shortestStart = c
+			end = c
 			break
 		}
 		neighbors := input.Grid.GetNeighbors(math.ManhattanMoves, c)
@@ -57,9 +56,6 @@ func calc(input Input, part2 bool) int {
 		}
 	}
 
-	if part2 {
-		return dist[shortestStart]
-	}
 	return dist[end]
 }
 
