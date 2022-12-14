@@ -31,3 +31,13 @@ func ChebyshevClosestOffset(pt1, pt2 image.Point) image.Point {
 func ChebyshevMove(pt1, pt2 image.Point) image.Point {
 	return pt1.Add(ChebyshevClosestOffset(pt1, pt2))
 }
+
+func GetNeighbors(moves []image.Point, p image.Point) []image.Point {
+	neighbors := []image.Point{}
+	for _, move := range moves {
+		neighbor := p.Add(move)
+		neighbors = append(neighbors, neighbor)
+	}
+
+	return neighbors
+}

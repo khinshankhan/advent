@@ -5,7 +5,6 @@ import (
 	"image"
 	"strings"
 
-	"github.com/khinshankhan/advent/lib/go/ds"
 	"github.com/khinshankhan/advent/lib/go/io"
 	"github.com/khinshankhan/advent/lib/go/math"
 )
@@ -31,20 +30,21 @@ func calc(input Input, part2 bool) int {
 	// small trick, it's probably easier to go end to start because of constraints
 	// even better for part 2 since we dont need to complete getting to the end
 	start, end := input.E, input.S
-	queue, dist := []image.Point{start}, make(map[image.Point]int, input.Grid.Len())
+	queue, dist := []image.Point{start}, make(map[image.Point]int, len(input.Grid))
 
 	for len(queue) > 0 {
 		c := queue[0]
 		queue = queue[1:]
 
-		if part2 && 'a' == input.Grid.Get(c) {
+		if part2 && 'a' == input.Grid[c] {
 			end = c
 			break
 		}
-		neighbors := input.Grid.GetNeighbors(math.ManhattanMoves, c)
+		neighbors := math.GetNeighbors(math.ManhattanMoves, c)
 		for _, neighbor := range neighbors {
+			_, has := input.Grid[neighbor]
 			_, seen := dist[neighbor]
-			if !seen && input.Grid.Get(c) < input.Grid.Get(neighbor)+2 {
+			if has && !seen && input.Grid[c] < input.Grid[neighbor]+2 {
 				queue, dist[neighbor] = append(queue, neighbor), dist[c]+1
 			}
 
@@ -60,25 +60,25 @@ func calc(input Input, part2 bool) int {
 }
 
 type Input struct {
-	Grid *ds.PointGrid[rune]
+	Grid map[image.Point]rune
 	S, E image.Point
 }
 
 func parse(s string) (ret Input) {
 	alphaHeights := strings.Fields(s)
-	ret.Grid = ds.NewPointGrid[rune](len(alphaHeights), len(alphaHeights[0]))
+	ret.Grid = make(map[image.Point]rune, len(alphaHeights)*len(alphaHeights[0]))
 
 	for y, line := range alphaHeights {
 		for x, r := range line {
 			point := image.Point{x, y}
-			ret.Grid.Set(point, r)
+			ret.Grid[point] = r
 			switch r {
 			case 'S':
 				ret.S = point
-				ret.Grid.Set(point, 'a')
+				ret.Grid[point] = 'a'
 			case 'E':
 				ret.E = point
-				ret.Grid.Set(point, 'z'+1)
+				ret.Grid[point] = 'z' + 1
 			}
 		}
 	}
