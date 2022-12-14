@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"image"
 	"strings"
@@ -10,132 +11,87 @@ import (
 	"github.com/khinshankhan/advent/lib/go/util"
 )
 
-var sandMoves = []image.Point{
-	// d, dl, dr for inverted grid
-	{0, 1}, {-1, 1}, {1, 1},
-}
+const (
+	Rock   = '#'
+	Sand   = 'o'
+	Source = '+'
+	Air    = '.'
+)
+
+var (
+	SourcePoint = image.Point{500, 0}
+	sandMoves   = []image.Point{
+		// d, dl, dr for inverted grid
+		{0, 1}, {-1, 1}, {1, 1},
+	}
+)
 
 func main() {
 	s := io.ReadRelativeFile("../data/day14.txt")
-	// s = sample
 	input := parse(s)
+	// since part b reuses input
+	m := util.CloneMap(input.m, math.Identity[rune])
+	input2 := input
+	input.m = m
+
 	fmt.Println(parta(input))
-	fmt.Println(partb(input))
+	fmt.Println(partb(input2))
 }
 
 func parta(input Input) int {
-	m := util.CloneMap(input.m, math.Identity[rune])
-	input.m = m
-	source := image.Point{500, 0}
-	m[source] = '+'
-
-	below := math.GetNeighbors(sandMoves, source)
-	c, count := source, 0
-	for c.Y <= input.maxY {
-		neighbors := math.GetNeighbors(sandMoves, c)
-		filled := true
+	curr, count, floor := SourcePoint, 0, input.maxY+1
+	for curr.Y < floor {
+		neighbors, filled := math.GetNeighbors(sandMoves, curr), true
 		for _, neighbor := range neighbors {
-			_, has := m[neighbor]
+			_, has := input.m[neighbor]
 			if !has {
 				filled = false
-				c = math.ClonePoint(neighbor)
+				curr = math.ClonePoint(neighbor)
 				break
 			}
 		}
-		if filled {
-			m[c] = 'o'
-			c, count = source, count+1
-		}
 
-		filled = true
-		for _, p := range below {
-			_, has := m[p]
-			if !has {
-				filled = false
+		if filled {
+			input.m[curr], count = Sand, count+1 // input.UpdateBounds(curr) // debugging
+			if curr.Eq(SourcePoint) {
 				break
 			}
+			curr = SourcePoint
 		}
-		if filled {
-			break
-		}
-	}
+	} // debugGrid(input.m, input.minX-1, input.minY, input.maxX+1, floor)
 
-	debugGrid(input)
 	return count
 }
 
 func partb(input Input) int {
-	m, minX, minY, maxX, maxY := input.m, input.minX, input.minY, input.maxX, input.maxY
 	source := image.Point{500, 0}
-	m[source] = '+'
+	input.m[SourcePoint], input.maxY = Source, input.maxY+2
 
-	below := math.GetNeighbors(sandMoves, source)
-	c, count := source, 0
+	curr, count, floor := source, 0, input.maxY
 	for {
-		neighbors := math.GetNeighbors(sandMoves, c)
-		filled := true
+		neighbors, filled := math.GetNeighbors(sandMoves, curr), true
 		for _, neighbor := range neighbors {
-			if neighbor.Y == input.maxY+2 {
+			if neighbor.Y == floor {
 				break
 			}
-			_, has := m[neighbor]
+			_, has := input.m[neighbor]
 			if !has {
 				filled = false
-				c = math.ClonePoint(neighbor)
-				if c.X < minX {
-					minX = c.X
-				}
-				if c.X > maxX {
-					maxX = c.X
-				}
-				if c.Y < minY {
-					minY = c.Y
-				}
-				if c.Y > maxY {
-					maxY = c.Y
-				}
+				curr = math.ClonePoint(neighbor)
 				break
 			}
 		}
-		if filled {
-			m[c] = 'o'
-			c, count = source, count+1
-		}
 
-		filled = true
-		for _, p := range below {
-			_, has := m[p]
-			if !has {
-				filled = false
+		if filled {
+			input.m[curr], count = Sand, count+1 // input.UpdateBounds(curr) // debugging
+			if curr.Eq(source) {
 				break
 			}
+			curr = source
 		}
-		if filled {
-			break
-		}
-	}
+	} // debugGrid(input.m, input.minX-2, input.minY, input.maxX+2, floor)
 
-	input.minX, input.minY, input.maxX, input.maxY = minX-2, minY, maxX+2, maxY+1
-	debugGrid(input)
-	return count + 1
-}
-
-func debugGrid(input Input) {
-	for y := input.minY; y < input.maxY+1; y++ {
-		fmt.Printf("%02d: ", y)
-		for x := input.minX; x < input.maxX; x++ {
-			p := image.Point{x, y}
-			v, has := input.m[p]
-			if has {
-				fmt.Printf(string(v))
-			} else {
-				fmt.Printf(".")
-			}
-		}
-		fmt.Printf("\n")
-	}
-
-	fmt.Println(input.minX, input.minY, input.maxX, input.maxY)
+	return count
 }
 
 type Input struct {
@@ -143,47 +99,69 @@ type Input struct {
 	minX, minY, maxX, maxY int
 }
 
+func (i *Input) UpdateBounds(p image.Point) {
+	if p.X < i.minX {
+		i.minX = p.X
+	}
+	if p.X > i.maxX {
+		i.maxX = p.X
+	}
+	if p.Y < i.minY {
+		i.minY = p.Y
+	}
+	if p.Y > i.maxY {
+		i.maxY = p.Y
+	}
+}
+
 func parse(s string) Input {
-	lines := strings.Split(s, "\n")
+	cleanedStr := "[[{\"X\":" +
+		strings.Join(
+			strings.Fields(
+				strings.NewReplacer(
+					" -> ", "},{\"X\":",
+					",", ",\"Y\":",
+				).Replace(strings.TrimSpace(s))),
+			"}],[{\"X\":") +
+		"}]]"
+	var lines [][]image.Point
+	json.Unmarshal([]byte(cleanedStr), &lines)
 
 	m := make(map[image.Point]rune)
-	var minX, minY, maxX, maxY int
-	minX = 500
+	input := Input{m, 500, 0, 0, 0}
 	for _, line := range lines {
-		fmt.Println("line", line)
-		coords := strings.Split(line, " -> ")
-		for i := 1; i < len(coords); i++ {
-			c1, c2 := strings.Split(coords[i-1], ","), strings.Split(coords[i], ",")
-			x1, y1 := util.FromStringToInt(c1[0]), util.FromStringToInt(c1[1])
-			x2, y2 := util.FromStringToInt(c2[0]), util.FromStringToInt(c2[1])
-			p1, p2 := image.Point{x1, y1}, image.Point{x2, y2}
-
+		for i := 1; i < len(line); i++ {
+			p1, p2 := line[i-1], line[i]
 			diff := p2.Sub(p1)
 			n := math.Max(math.Abs(diff.X), math.Abs(diff.Y))
 			move := math.NormalizePoint(diff)
-			c := p1
+			curr := p1
 			for i := 0; i <= n; i++ {
-				if i != 0 {
-					c = c.Add(move)
-				}
-				m[c] = '#'
-				if c.X < minX {
-					minX = c.X
-				}
-				if c.X > maxX {
-					maxX = c.X
-				}
-				if c.Y < minY {
-					minY = c.Y
-				}
-				if c.Y > maxY {
-					maxY = c.Y
-				}
+				input.UpdateBounds(curr) // helpful to see 'floor'
+				input.m[curr] = Rock
+				curr = curr.Add(move)
 			}
 		}
 	}
+	input.m[SourcePoint] = Source
 
-	return Input{m, minX, minY, maxX, maxY}
+	return input
+}
+
+func debugGrid(m map[image.Point]rune, minX, minY, maxX, maxY int) {
+	for y := minY; y < maxY+1; y++ {
+		fmt.Printf("%02d: ", y)
+		for x := minX; x < maxX; x++ {
+			p := image.Point{x, y}
+			v, has := m[p]
+			if has {
+				fmt.Printf(string(v))
+			} else {
+				fmt.Printf(string(Air))
+			}
+		}
+		fmt.Printf("\n")
+	}
 }
 
 var sample = `498,4 -> 498,6 -> 496,6
