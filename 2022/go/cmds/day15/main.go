@@ -73,8 +73,6 @@ func parta(input Input) int {
 		}
 	}
 
-	fmt.Println(input.minX, input.minY, input.maxX, input.maxY)
-
 	return len(relevantRow) - arebeacon
 }
 
@@ -85,59 +83,64 @@ func partb(input Input) int {
 	}
 
 	potential := make(map[image.Point]struct{})
+	addPotential := func(point image.Point) {
+		if point.X >= 0 && point.X <= maxCoord && point.Y >= 0 && point.Y <= maxCoord {
+			potential[point] = struct{}{}
+		}
+	}
 	for sensor, beacon := range input.sensors {
 		dist := math.ManhattanDistance(sensor, beacon)
 
+		// 0-3 are manhattan moves
+		// dist + 1 to get diamond, each edge's points should be out of current sensor range
 		up := math.ChebyshevMoves[0].Mul(dist + 1).Add(sensor)
 		down := math.ChebyshevMoves[1].Mul(dist + 1).Add(sensor)
 		right := math.ChebyshevMoves[2].Mul(dist + 1).Add(sensor)
 		left := math.ChebyshevMoves[3].Mul(dist + 1).Add(sensor)
-		potential[up] = struct{}{}
-		potential[down] = struct{}{}
-		potential[right] = struct{}{}
-		potential[left] = struct{}{}
 
-		c := left
+		// get points along each edge of the diamond
+		// we can use the rest of chebyshev moves for this
+		point := left
 		for done := false; !done; {
-			done = c.Eq(up)
-			c = c.Add(math.ChebyshevMoves[4])
-			potential[c] = struct{}{}
+			done = point.Eq(up)
+			addPotential(point)
+			point = point.Add(math.ChebyshevMoves[4])
 		}
 
-		c = left
-		for !c.Eq(down) {
-			c = c.Add(math.ChebyshevMoves[5])
-			potential[c] = struct{}{}
+		point = left
+		for !point.Eq(down) {
+			addPotential(point)
+			point = point.Add(math.ChebyshevMoves[5])
 		}
 
-		c = right
-		for !c.Eq(up) {
-			c = c.Add(math.ChebyshevMoves[6])
-			potential[c] = struct{}{}
+		point = right
+		for !point.Eq(up) {
+			addPotential(point)
+			point = point.Add(math.ChebyshevMoves[6])
 		}
 
-		c = right
-		for !c.Eq(down) {
-			c = c.Add(math.ChebyshevMoves[7])
-			potential[c] = struct{}{}
+		point = right
+		for !point.Eq(down) {
+			addPotential(point)
+			point = point.Add(math.ChebyshevMoves[7])
 		}
 	}
 
-	for sensor, beacon := range input.sensors {
-		dist := math.ManhattanDistance(sensor, beacon)
-		for point := range potential {
+	// points mightve been in another sensor's range, remove them
+	for point := range potential {
+		for sensor, beacon := range input.sensors {
+			dist := math.ManhattanDistance(sensor, beacon)
 			sensorToPotential := math.ManhattanDistance(sensor, point)
 			if sensorToPotential <= dist {
 				delete(potential, point)
+				break
 			}
 		}
 	}
 
 	distressBeacon := image.Point{}
-	for point := range potential {
-		if point.X >= 0 && point.X <= maxCoord && point.Y >= 0 && point.Y <= maxCoord {
-			distressBeacon = point
-		}
+	for point := range potential { // only one point, but no way to retrieve
+		distressBeacon = point
 	}
 
 	return distressBeacon.X*4000000 + distressBeacon.Y
